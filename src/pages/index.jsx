@@ -192,7 +192,7 @@ const Home = () => {
               <span className="font-ocra text-sm">&lt;&lt;H&lt;</span>.
             </p>
 
-            <p>Volunteer applications are closed</p>
+            <p>Volunteer and mentor applications are closed</p>
           </div>
         </div>
       </Layout>
