@@ -19,7 +19,11 @@ const Layout = ({ children, showEthDiamond, className, hidden }) => {
           className={`z-10 hidden md:flex justify-end my-9 sm:mr-12 font-ocra text-black`}
         >
           <div>May 24-26, 2024</div>
-          <div className="sm:ml-8">Kreuzberg, Berlin</div>
+          <div className="sm:ml-8">
+            <a href="https://cic.com/berlin/" target="_blank">
+              CIC Innovation Center, Berlin
+            </a>
+          </div>
         </div>
         {/* SecurityStrip*/}
         <div
