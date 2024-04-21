@@ -21,7 +21,7 @@ const Layout = ({ children, showEthDiamond, className, hidden }) => {
           <div>May 24-26, 2024</div>
           <div className="sm:ml-8">
             <a href="https://cic.com/berlin/" target="_blank">
-              CIC Innovation Center, Berlin
+              CIC Innovation Campus, Berlin
             </a>
           </div>
         </div>
