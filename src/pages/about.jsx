@@ -1,5 +1,6 @@
 import Layout from "../components/Layout";
 import React, { useState, useEffect } from "react";
+import ETHBerlin from "../components/ETHBerlin";
 
 const About = () => {
   const [randomizedNames, setRandomizedNames] = useState([]);
@@ -42,9 +43,7 @@ const About = () => {
           ETHBerlin is known as the hackathon extravaganza, a cultural festival,
           an educational event, a platform for hacktivism, and a community
           initiative to push the decentralized ecosystem forward.{" "}
-          <span className="font-ocra text-sm">
-            ETHBerlin04 &lt;&lt;&lt;Identity Crisis&lt;&lt;&gt;&gt;&gt;
-          </span>{" "}
+          <ETHBerlin />{" "}
           is the fourth edition, and we've come a long way since we hosted our
           first hackathon in 2018.{" "}
         </p>
