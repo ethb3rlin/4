@@ -20,7 +20,10 @@ const About = () => {
       "Lea",
       "Raul",
       "Konrad",
-      "Hany",
+      "Kirill",
+      "Yaron",
+      "Lea",
+      "Carl",
       "Peter",
     ];
 
@@ -50,8 +53,8 @@ const About = () => {
           reaffirm its commitment with the ecosystem and founded the{" "}
           <a href="https://dod.ngo" target="_blank" rel="noreferrer">
             Department of Decentralization
-          </a>
-          . The DoD is responsible for initiatives that go beyond organizing
+          </a> (DoD).
+          The DoD is responsible for initiatives that go beyond organizing
           hackathons and seek to also support the projects coming from our
           events and community. ETHBerlin 2018 and ETHBerlinZwei 2019 sought to
           marry the culture and values of Berlin with those of the builder
@@ -64,7 +67,7 @@ const About = () => {
         </p>
         <p>
           2024 will be the year of bringing all what we've learned and
-          experienced over the years together: We find ourselves at the
+          experienced over the years together: We find ourselves at the
           intersection of decentralization, privacy and security - let's put it
           to use.
         </p>
