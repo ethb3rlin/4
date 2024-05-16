@@ -467,7 +467,7 @@ const Hack = () => {
             </a>{" "}
             of contributions, or can build an entirely new thing that they
             consider to be a positive impact for future versions of ETHBerlin.
-            The winner of this track will receive <strong>4,000 DAI</strong>.
+            The winner of this track will receive <strong>4,000 DAI</strong> and DEVCon7 tickets.
           </div>
           <h4 className="text-l mt-4 font-bold">The Hacker's Choice Award</h4>
           <div className="mt-2">
