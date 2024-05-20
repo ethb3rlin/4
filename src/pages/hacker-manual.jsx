@@ -568,11 +568,11 @@ const Hack = () => {
               <ul>
                 <li>Go to {" "}
                   <a
-                    href="https://submissions.ethberlin.org/"
+                    href="https://projects.ethberlin.org/"
                     target="_blank"
                     rel="noreferrer noopener"
                   >
-                  submission.ethberlin.org
+                  projects.ethberlin.org
                   </a> 
                   {" "} and sign in with your Zupass credentials to receive your role as "hacker".</li>
                 <li>Create or join an existing team</li>
