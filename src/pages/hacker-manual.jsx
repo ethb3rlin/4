@@ -553,7 +553,41 @@ const Hack = () => {
           </p>
           <div id="submissions">
             <h3 className="text-xl mt-6 font-bold">Submissions</h3>
-            <p>The submissions tool will be published soon.</p>
+            <p>This year thanks to our amazing Kirill, we've built our own tool for submissions and judging. The tool is open source, simple to use and should make the job of judging and tallying scores simple and fast.</p>
+            <p>If you run into any problems or have any feedback it would be much appreciated if you would open an issue{" "} 
+               <a
+                href="https://github.com/ethb3rlin/Submi-ions/issues"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                in the github repo
+              </a> 
+              .
+              </p>
+              <b>The general flow for using the tool is as follows:</b>
+              <ul>
+                <li>Go to {" "}
+                  <a
+                    href="https://submissions.ethberlin.org/"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                  submission.ethberlin.org
+                  </a> 
+                  {" "} and sign in with your Zupass credentials to receive your role as "hacker".</li>
+                <li>Create or join an existing team</li>
+                <li>Now you can submit projects and join team.</li>
+                <li>To submit a project click the "Submit a project" button in the top bar.</li>
+                <li>There is a simple template with information you should add, but feel free to add whatever additional information you find relevant for your submission.</li>
+                <li>Make sure to submit everything before the deadline Sunday 26th at 12:00, when submissions close.</li>
+                <li>Once submissions are closed keep an eye on the general matrix channel, where we will provide further instructions for when your team will have to present to the judges.</li>
+              </ul>
+              <b>Some things to keep in mind:</b>
+              <ul>
+                <li>Put as much information into the Github, Radicle, or whatever code collaboration platform you use, about the project so that judges and other hackers only need to look in one place to learn as much as possible about the project.</li>
+                <li>Dedicate some time to make a crisp and precice presentation and don't forget to submit it too.</li>
+                <li>Make sure to select the track that fits best to your project.</li>
+              </ul>
           </div>
           <div id="judging">
             <h3 className="text-xl mt-6 font-bold">Judging</h3>
