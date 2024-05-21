@@ -544,7 +544,7 @@ const Program = () => {
                 startTime="19:00"
                 endTime="19:30"
                 title="Hacker Team Finding Session"
-                eventLocations={[locations.lexis]}
+                eventLocations={[locations.yard0]}
               />
               <ProgramItem
                 dayStr="2024-05-24"

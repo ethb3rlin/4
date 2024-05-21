@@ -524,8 +524,31 @@ const Experiences = () => {
               during the weekend.
             </div>
           </div>
-
           <div className="mt-8">
+            <div className="inline-flex flex-wrap items-center">
+              <h3 className="font-bold text-lg mr-1">
+                ETHBerlin Privacy Corner
+              </h3>
+              <span>by</span>
+              <a
+                href="https://c24ber.web3privacy.info"
+                target="blank"
+                rel="noreferrer noopener"
+                className="underline ml-1"
+              >
+                Web3 Privacy now
+              </a>
+              <LocationButton loc={locations.library} />
+            </div>
+            <div className="ml-4">
+              Hacker-focused safe space where you can get productive feedback
+              on your hackathon project idea, its privacy features, and general viability.
+              The Web3 Privacy team will be available throughout the weekend
+              and will host open feedback and ideation sessions.
+              For more info please see: <a href="https://c24ber.web3privacy.info">https://c24ber.web3privacy.info</a>
+            </div>
+          </div>
+          <div id="party" className="mt-8">
             <div className="inline-flex flex-wrap items-center">
               <h3 className="font-bold text-lg mr-1">After party</h3>
               <span>by</span>
@@ -556,39 +579,15 @@ const Experiences = () => {
                 <strong>Aeden</strong>
               </a>
             </div>
-            <div className="ml-4">From 8PM onwards on Sunday night.</div>
+            <div className="ml-4"><em>From 8PM onwards on Sunday night.</em></div>
             <div className="ml-4">
               It would not be a hackathon without an after party. It would also
               not be Berlin without a dose of techno.
             </div>
             <div className="ml-4">
-              You will receive an afterparty wristband during the hackathon
+              You will receive an after-party wristband during the hackathon
               registration. If you don't want to or cannot attend on Sunday
               evening, you can share it with your friends.
-            </div>
-          </div>
-          <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">
-                ETHBerlin Privacy Corner
-              </h3>
-              <span>by</span>
-              <a
-                href="https://c24ber.web3privacy.info"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Web3 Privacy now
-              </a>
-              <LocationButton loc={locations.library} />
-            </div>
-            <div className="ml-4">
-              Hacker-focused safe space where you can get productive feedback
-              on your hackathon project idea, its privacy features, and general viability.
-              The Web3 Privacy team will be available throughout the weekend
-              and will host open feedback and ideation sessions.
-              For more info please see: <a href="https://c24ber.web3privacy.info">https://c24ber.web3privacy.info</a>
             </div>
           </div>
         </div>

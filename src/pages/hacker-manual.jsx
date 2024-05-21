@@ -53,8 +53,34 @@ const Hack = () => {
                 zupass.org
               </a>
             </li>
-            {/* @TO DO Link Faucets */}
-            {/* @TO DO Link Submissions */}
+            <li>
+              Get testnet Ether for{" "}
+              <a
+                href="https://sepolia.ethberlin.org/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Sepolia
+              </a> and{" "}
+              <a
+                href="https://holesky.ethberlin.org/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Holesky
+              </a> using your Zupass semaphore identity.
+            </li>
+            <li>
+              Create an account on our Submißion tool and unlock it with your Zupass
+              semaphore identity:{" "}
+              <a
+                href="https://projects.ethberlin.org"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                projects.ethberlin.org
+              </a>
+            </li>
             <li>
               Visit this page frequently as we update the manual regularly.
             </li>
@@ -814,7 +840,13 @@ const Hack = () => {
               process will be explained soon.
             </p>
           </div>
-          <div id="party"></div>
+          <div id="party">
+            <h3 className="text-xl mt-6 font-bold">After party</h3>
+            <p>
+              It would not be ETHBerlin without an after party.{" "}
+              <a href="/experiences#party">Read more</a>.
+            </p>
+          </div>
         </div>
 
         <VenueMapModal
