@@ -44,17 +44,24 @@ const Privacy = () => (
               target="_blank"
               rel="noreferrer">GitHub Privacy Statement</a>.
           </li>
+        </ul>
+        <p className="mt-2"/>
+        <h2 className="text-xl font-bold">Sharing your data</h2>
+        <p className="mt-2">We don&apos;t pass on your information to anyone.</p>
+        <p className="mt-2">
+          The following services are granted access to our user data on request:
+        </p>
+        <ul>
           <li>
-            Zupass is used to provide cryptographic credentials to allow you to access
-            our events. Therefore, Zupass is privileged to query your email address and
-            ticket status from ETHBerlin.{" "}
+            Zupass is used to provide cryptographic credentials to allow you to use
+            tailored services. Therefore, Zupass is privileged to query your email address
+            and ticket status from ETHBerlin if you intend to use their services.{" "}
             <a href="https://zupass.org/#/terms">
               Zupass Privacy Notice
             </a>.
           </li>
         </ul>
-        <h2 className="text-xl font-bold">Sharing your data</h2>
-        <p className="mt-2">We don&apos;t pass on your information to anyone.</p>
+        <p className="mt-2"/>
         <h2 className="text-xl font-bold">Transferring your data outside of the EU</h2>
         <p className="mt-2">
           Goerli Dezentral gGmbH is based in Germany. Your data, will be processed
