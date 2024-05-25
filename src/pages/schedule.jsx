@@ -436,7 +436,7 @@ const Program = () => {
           {/* Hacker Essentials vs Extravaganza */}
 
           <div
-            className={`flex items-center justify-center w-full sticky -top-1 py-4 text-center  ${
+            className={`flex items-center justify-center w-full sticky -top-1 py-4 text-center schedule-sticky ${
               isSticky ? "bg-white" : ""
             }`}
             ref={toggleRef}
