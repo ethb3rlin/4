@@ -837,15 +837,24 @@ const Hack = () => {
               after the hackathon!
             </p>
             <p>
-              Please make sure you have claimed your zero-knowledge proof on
-              Zupass (<a href="#zupass">instructions</a>) in order to be
-              eligible to vote on submissions. If you have not done so before
-              Sunday at 11:30, you may be unable to vote.
+              The link to vote is available at{" "}
+              <a href="https://zupoll.org/ballot?id=155">
+                https://zupoll.org/ballot?id=155
+              </a>
+              . To vote, please select an option from the list of projects and
+              click "Submit Vote". You may filter options by typing in the
+              "Search Options" text bar at the top, and you can view the details
+              in the submission app by clicking on the "More Details" button.
             </p>
             <p>
-              The link for voting will be available on Sunday the 26th, at
-              12:00. The poll will be up for one week and will close on Monday,
-              27th of May.
+              Note that if you have not claimed your zero-knowledge proof on
+              Zupass before Sunday at 11:30, you will be unable to vote on this
+              poll. This is because we lock the group once the poll is created
+              to preserve anonymity while preventing double-voting.
+            </p>
+            <p>
+              The poll will be up for one week and will close on Monday, 3rd of
+              June.
             </p>
           </div>
           <div id="party">
