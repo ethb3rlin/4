@@ -156,14 +156,14 @@ const Home = () => {
           {/* Left side text box */}
           <div className="textbox xl:w-2/3">
             <p>
-              ETHBerlin is a hackathon, a cultural festival, an educational
+              ETHBerlin was a hackathon, a cultural festival, an educational
               event, a platform for hacktivism, and a community initiative to
               push the decentralized ecosystem forward.
             </p>
 
             <p>
-              Loading <ETHBerlin />: May 24-26, 2024, CIC Innovation Campus,
-              Berlin, Germany.
+              You can find the projects that emerged during the hackathon 
+              <a href="https://projects.ethberlin.org/submissions/results"> here</a>.
             </p>
 
             <p>
@@ -192,12 +192,12 @@ const Home = () => {
 
             <p>
               ETHBerlin is not a conference but a hackathon. Every attendee
-              plays an active role in the event.{" "}
-              <b>All applications are closed</b>. ETHBerlin04 is part of the{" "}
+              played an active role in the event.{" "}
+              <b>All applications are closed</b>. ETHBerlin04 was part of the{" "}
               <a href="https://blockchainweek.berlin" target="_blank">
                 blockchainweek.berlin
               </a>
-              . See you in Berlin!
+              .
             </p>
           </div>
         </div>
