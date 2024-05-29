@@ -62,11 +62,7 @@ const ProgramItem = ({
   return (
     <div
       className={`${isExtravaganza ? "text-berlin-red" : ""} ${
-        currentDate > endDate
-          ? "text-gray-300"
-          : currentDate > startDate
-          ? "font-bold animate-pulse-faster"
-          : className
+          className
       } list-none md:text-lg mt-3`}
     >
       <span className="fake-bold">
