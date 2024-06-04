@@ -41,9 +41,9 @@ import { ImSoundcloud } from "react-icons/im";
 // Stop greying out
 const currentDate = new Date("2020-05-26T01:00:00+02:00");
 
-setInterval(() => {
-  currentDate = new Date();
-}, 60000);
+// setInterval(() => {
+//   currentDate = new Date();
+// }, 60000);
 
 const ProgramItem = ({
   title,
