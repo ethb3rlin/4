@@ -36,8 +36,10 @@ import puja from "../assets/people/speakers/puja.jpeg";
 import { FaExternalLinkAlt, FaTwitter } from "react-icons/fa";
 import { ImSoundcloud } from "react-icons/im";
 
-let currentDate = new Date();
-// const currentDate = new Date("2024-05-26T01:00:00+02:00");
+// let currentDate = new Date();
+
+// Stop greying out
+const currentDate = new Date("2020-05-26T01:00:00+02:00");
 
 setInterval(() => {
   currentDate = new Date();
