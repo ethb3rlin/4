@@ -162,8 +162,12 @@ const Home = () => {
             </p>
 
             <p>
-              You can find the projects that emerged during the hackathon 
-              <a href="https://projects.ethberlin.org/submissions/results"> here</a>.
+              You can find the projects that emerged during the hackathon
+              <a href="https://projects.ethberlin.org/submissions/results">
+                {" "}
+                here
+              </a>
+              .
             </p>
 
             <p>
@@ -186,6 +190,14 @@ const Home = () => {
               To read our manifesto, press{" "}
               <span className="font-ocra text-sm">
                 &lt;&lt;<span className="text-berlin-red">M</span>&lt;
+              </span>
+              .
+            </p>
+
+            <p>
+              To see the photos from the hackathon, press{" "}
+              <span className="font-ocra text-sm">
+                &lt;&lt;<span className="text-berlin-red">G</span>&lt;
               </span>
               .
             </p>

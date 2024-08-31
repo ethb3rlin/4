@@ -21,6 +21,10 @@ const Sidebar = ({ className }) => {
         {" "}
         &lt;&lt;<span className="text-berlin-red">M</span>&lt;ANIFESTO
       </a>
+      <a className="my-2" href="/gallery">
+        {" "}
+        &lt;&lt;<span className="text-berlin-red">G</span>&lt;ALLERY
+      </a>
       <a className="my-2" href="/hacker-manual">
         {" "}
         &lt;&lt;<span className="text-berlin-red">H</span>&lt;ACKER MANUAL

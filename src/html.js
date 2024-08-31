@@ -66,6 +66,9 @@ export default function HTML(props) {
                     case 'b':
                         window.location.href= "https://blog.dod.ngo/";
                         break;
+                    case 'g':
+                        window.location.href= "/gallery";
+                        break;
                     default:
                         // If key doesn't match any case, do nothing
                         break;
