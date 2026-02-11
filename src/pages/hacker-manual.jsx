@@ -229,7 +229,7 @@ const Hack = () => {
             and Facebook groups or post your own requests post there. However,
             please be wary of the risks and potential scams. Join our{" "}
             <a
-              href="https://matrix.to/#/%23eb4-couches:dod.ngo"
+              href="https://matrix.to/#/%23ethberlin:dod.ngo"
               target="_blank"
               rel="noreferrer noopener"
             >
@@ -522,7 +522,7 @@ const Hack = () => {
             <li>
               To get help ask questions in the Mentor Matrix room:{" "}
               <a
-                href="https://matrix.to/#/#eb4-mentors:dod.ngo"
+                href="https://matrix.to/#/%23ethberlin:dod.ngo"
                 target="_blank"
                 rel="noreferrer noopener"
               >

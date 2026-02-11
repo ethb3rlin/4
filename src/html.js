@@ -42,7 +42,7 @@ export default function HTML(props) {
                         window.location.href= "/contact";
                         break;
                     case 'd':
-                        window.location.href= "/decentralization";
+                        window.location.href= "https://dod.ngo";
                         break;
                     case 'o':
                         window.location.href= "/code-of-conduct";
@@ -64,7 +64,7 @@ export default function HTML(props) {
                         window.location.href= "/venue";
                         break;
                     case 'b':
-                        window.location.href= "https://blog.dod.ngo/";
+                        window.location.href= "https://dod.ngo/blog";
                         break;
                     case 'g':
                         window.location.href= "/gallery";

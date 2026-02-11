@@ -166,7 +166,7 @@ const Privacy = () => (
           under the Data Protection Act which is
           <em>Berliner Beauftragte für Datenschutz und Informationsfreiheit</em>:
           Friedrichstr. 219, Guest entrance: Puttkamerstr. 16 - 18 (5th floor),
-          Phone: 030 13889-0, Fax: 030 2155050, Email: mailbox@datenschutz-berlin.de
+          Phone: 030 13889-0, Fax: 030 2155050, Email: mailbox@ethberlin.org
         </p>
         <p className="mt-2">
           You also have the right to lodge a complaint with the supervisory

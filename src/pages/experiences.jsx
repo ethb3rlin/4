@@ -232,7 +232,7 @@ const Experiences = () => {
               <h3 className="font-bold text-lg mr-1">Gift Shop</h3>
               <span>hosted by</span>
               <a
-                href="/decentralization"
+                href="https://dod.ngo"
                 target="blank"
                 rel="noreferrer noopener"
                 className="underline ml-1"
@@ -443,7 +443,7 @@ const Experiences = () => {
               <h3 className="font-bold text-lg mr-1">Cypherpunk Cinema</h3>
               <span>by</span>
               <a
-                href="/decentralization"
+                href="https://dod.ngo"
                 target="blank"
                 rel="noreferrer noopener"
                 className="underline ml-1"

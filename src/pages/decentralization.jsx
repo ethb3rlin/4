@@ -56,8 +56,8 @@ const decentralization = () => (
           <li>
             <span className="font-bold">ETHBerlin³ (2022): </span>hackathon,
             conference, and cultural festival, third edition:{" "}
-            <a href="https://ethberlin.ooo" target="_blank" rel="noreferrer">
-              ethberlin.ooo
+            <a href="https://2022.ethberlin.org" target="_blank" rel="noreferrer">
+              2022.ethberlin.org
             </a>
           </li>
           <li>
@@ -107,11 +107,11 @@ const decentralization = () => (
             <span className="font-bold">ETHBerlin ZWEI (2019): </span>hackathon,
             conference, and cultural festival, second edition:{" "}
             <a
-              href="https://ethberlinzwei.com"
+              href="https://2019.ethberlin.org"
               target="_blank"
               rel="noreferrer"
             >
-              ethberlinzwei.com
+              2019.ethberlin.org
             </a>
           </li>
           <li>
@@ -140,16 +140,16 @@ const decentralization = () => (
             <span className="font-bold">GoerliCon 0 (2019): </span>The Ethereum
             testnet and infrastructure conference where the Goerli Testnet was
             launched live on stage:{" "}
-            <a href="https://goerli.net/" target="_blank" rel="noreferrer">
-              goerli.net
+            <a href="https://goerli.dod.ngo" target="_blank" rel="noreferrer">
+              goerli.dod.ngo
             </a>
           </li>
           <li>
             <span className="font-bold">ETHBerlin (2018):</span> Hackathon,
             conference, and the first event that ran almost entirely using
             decentralized applications:{" "}
-            <a href="https://ethberlin.com" target="_blank" rel="noreferrer">
-              ethberlin.com
+            <a href="https://2018.ethberlin.org" target="_blank" rel="noreferrer">
+              2018.ethberlin.org
             </a>
           </li>
         </ul>

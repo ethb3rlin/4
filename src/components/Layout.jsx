@@ -48,13 +48,13 @@ const Layout = ({ children, showEthDiamond, className, hidden }) => {
         <footer
           className={`flex flex-col md:flex-row flex-wrap justify-evenly items-center text-center sm:justify-end my-4 z-20 sm:mr-6 text-xs font-ocra sm:ml-72 leading-3`}
         >
-          <a className="mx-4 my-2 sm:ml-4 text-black" href="/decentralization">
+          <a className="mx-4 my-2 sm:ml-4 text-black" href="https://dod.ngo">
             {" "}
             &lt;&lt;<span className="text-berlin-red">D</span>&lt;EPARTMENT OF DECENTRALIZATION
           </a>
           <a
             className="mx-4 my-2 sm:ml-4 text-black"
-            href="https://blog.dod.ngo/"
+            href="https://dod.ngo/blog"
             target="_blank"
             rel="noreferrer"
           >
