@@ -1,0 +1,159 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Department of Decentralization
+ * SPDX-License-Identifier: Unlicense
+ *
+ * This is free and unencumbered software released into the public domain.
+ * For more information, please refer to <https://unlicense.org>
+ */
+
+/*
+ * Entry stamps for the previous editions (src/components/EditionStamps.jsx),
+ * option 2a of the design "ETHBerlin previous editions backlinks".
+ *
+ * Each .stamp link holds place, tilt, opacity and the multiply blend, so the
+ * inks darken where stamps overlap. Its .stamp-ink child holds border, text
+ * and the worn-ink mask: the mask stays off the link, so it cannot hide the
+ * link's focus ring. Every rule sits under .edition-stamps, which outranks the
+ * site's global link styles (a:hover, .decorate-links a).
+ */
+
+.edition-stamps {
+  /* Fractal noise in one 180 x 180 px tile, repeated. The color matrix sets
+     alpha to 1 where the noise is low and to 0 where it is high, which leaves
+     pale speckles in the ink. */
+  --stamp-noise: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.8%27 numOctaves=%272%27 seed=%275%27/%3E%3CfeColorMatrix values=%270 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -5 4%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E");
+  position: relative;
+  width: 255px;
+  height: 158px;
+  margin: 14px auto 0;
+}
+
+.edition-stamps .stamp {
+  position: absolute;
+  color: inherit;
+  text-decoration: none;
+  transform: rotate(var(--stamp-tilt));
+  mix-blend-mode: multiply;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.edition-stamps .stamp-ink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-mask-image: var(--stamp-noise);
+  mask-image: var(--stamp-noise);
+}
+
+.edition-stamps .stamp-name,
+.edition-stamps .stamp-date {
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.edition-stamps .stamp-rule {
+  align-self: stretch;
+  margin: 4px 0 3px;
+  border-top: 1px solid currentColor;
+}
+
+.edition-stamps .stamp-ring {
+  position: absolute;
+  inset: 3px;
+  border: 1px solid currentColor;
+  border-radius: inherit;
+}
+
+/* ETHBerlin³: red rectangle with a double border, top left. */
+.edition-stamps .stamp-third {
+  --stamp-tilt: -7deg;
+  top: 16px;
+  left: 2px;
+  opacity: 0.88;
+}
+
+.edition-stamps .stamp-third .stamp-ink {
+  padding: 6px 11px 5px;
+  border: 3px double #e65b54;
+  border-radius: 3px;
+  color: #e65b54;
+}
+
+.edition-stamps .stamp-third .stamp-name {
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+}
+
+.edition-stamps .stamp-third .stamp-date {
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.14em;
+}
+
+/* ETHBerlin ZWEI: black circle with an inner ring, top right. */
+.edition-stamps .stamp-zwei {
+  --stamp-tilt: 9deg;
+  top: 0;
+  right: 0;
+  opacity: 0.8;
+}
+
+.edition-stamps .stamp-zwei .stamp-ink {
+  position: relative;
+  justify-content: center;
+  width: 114px;
+  height: 114px;
+  border: 2px solid #111;
+  border-radius: 50%;
+  color: #111;
+  -webkit-mask-position: -61px -23px;
+  mask-position: -61px -23px;
+}
+
+.edition-stamps .stamp-zwei .stamp-name {
+  letter-spacing: 0.12em;
+}
+
+.edition-stamps .stamp-zwei .stamp-word {
+  font-size: 22px;
+  line-height: 26px;
+  letter-spacing: 0.06em;
+}
+
+/* ETHBerlin: red pill with an inner ring, below and between the two. */
+.edition-stamps .stamp-first {
+  --stamp-tilt: -2.5deg;
+  top: 100px;
+  left: 56px;
+  opacity: 0.9;
+}
+
+.edition-stamps .stamp-first .stamp-ink {
+  position: relative;
+  padding: 8px 20px 7px;
+  border: 2px solid #e65b54;
+  border-radius: 999px;
+  color: #e65b54;
+  -webkit-mask-position: -97px -131px;
+  mask-position: -97px -131px;
+}
+
+.edition-stamps .stamp-first .stamp-name {
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.08em;
+}
+
+.edition-stamps .stamp-first .stamp-date {
+  letter-spacing: 0.18em;
+}
+
+/* Hover and keyboard focus ink a stamp fully and lift it a little. */
+.edition-stamps .stamp:hover,
+.edition-stamps .stamp:focus-visible {
+  opacity: 1;
+  transform: rotate(var(--stamp-tilt)) scale(1.05);
+}

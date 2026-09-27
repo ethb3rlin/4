@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import ETHBerlin from "../components/ETHBerlin";
 import { useBreakpoint } from "../components/useBreakpoint";
 import EthBerlinLogo from "../components/EthBerlinLogo";
+import EditionStamps from "../components/EditionStamps";
 import SEO from "../components/seo";
 
 const Home = () => {
@@ -139,7 +140,7 @@ const Home = () => {
         <div className={`flex flex-col xl:flex-row-reverse`}>
           {/* Right side Wolpy and faces */}
           <div className="textbox my-8 xl:ml-8 text-black decorate-links flex justify-center items-center">
-            <p className="mt-4 text-center">
+            <div className="mt-4 mb-6 text-center">
               <div className="flex flex-col items-center justify-center mb-4">
                 <img
                   src={imageSrcPass}
@@ -151,7 +152,8 @@ const Home = () => {
               <p className="font-ocra my-0"> Theme: Identity Crisis</p>
               <p className="font-ocra my-0"> Dates: May 24-26, 2024</p>
               <p className="font-ocra my-0"> Location: CIC, Berlin</p>
-            </p>
+              <EditionStamps />
+            </div>
           </div>
           {/* Left side text box */}
           <div className="textbox xl:w-2/3">
