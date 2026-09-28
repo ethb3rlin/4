@@ -473,7 +473,7 @@ const Program = () => {
             </label>
           </div>
           <h2 className="text-xl font-bold font-ocra mt-4">Friday, May 24</h2>
-          <p className="mt-4">
+          <div className="mt-4 mb-6">
             <ul>
               <ProgramItem
                 dayStr="2024-05-24"
@@ -699,13 +699,13 @@ const Program = () => {
                 eventLocations={[locations.restaurant]}
               />
             </ul>
-          </p>
+          </div>
           <div className="flex justify-center">
             <div className="border-b-[1px] mb-8 mt-4 border-berlin-red opacity-40 w-full"></div>
           </div>
           <h2 className="text-xl font-bold font-ocra">Saturday, May 25th</h2>
           <p className="mt-4">Happy hacking, no distractions!</p>
-          <p className="mt-4">
+          <div className="mt-4 mb-6">
             <ProgramItem
               dayStr="2024-05-25"
               startTime="00:00"
@@ -1052,7 +1052,7 @@ const Program = () => {
               title="Midnight Snack"
               eventLocations={[locations.restaurant]}
             />
-          </p>
+          </div>
           <div className="flex justify-center">
             <div className="border-b-[1px] mb-8 mt-4 border-berlin-red opacity-40 w-full"></div>
           </div>
@@ -1060,7 +1060,7 @@ const Program = () => {
           <p className="mt-4">
             Don't forget to submit your projects by 11:30 am Berlin time!
           </p>
-          <p className="mt-4">
+          <div className="mt-4 mb-6">
             <ul>
               <ProgramItem
                 dayStr="2024-05-26"
@@ -1323,7 +1323,7 @@ Then we will look at tools and techniques we can use to govern and sustain crypt
                 />
               )}
             </ul>
-          </p>
+          </div>
         </div>
       </div>
 

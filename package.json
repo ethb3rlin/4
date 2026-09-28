@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "engines": {
-    "node": ">=20.0.0 <21"
+    "node": ">=24"
   },
   "description": "ETHBerlin04 website",
   "author": "kuzdogan",
@@ -16,38 +16,31 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "node --test --experimental-test-coverage src/data/editions.test.mjs",
-    "deploy": "echo 'https://ethberlin.org' > ./build/CNAME && gh-pages -d build"
+    "test": "node --test --experimental-test-coverage src/data/editions.test.mjs"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^1.6.22",
-    "@mdx-js/react": "^1.6.22",
-    "gatsby": "^4.25.8",
-    "gatsby-plugin-image": "^2.18.1",
-    "gatsby-plugin-manifest": "^4.19.0",
-    "gatsby-plugin-mdx": "^3.18.1",
-    "gatsby-plugin-sharp": "^4.18.1",
-    "gatsby-plugin-sitemap": "^5.18.1",
-    "gatsby-source-filesystem": "^4.18.1",
-    "gatsby-transformer-sharp": "^4.18.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "gatsby": "^5.16.1",
+    "gatsby-plugin-manifest": "^5.16.0",
+    "gatsby-plugin-sitemap": "^6.16.0",
+    "gatsby-source-filesystem": "^5.16.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-grid-gallery": "^1.0.1",
-    "react-helmet": "^6.1.0",
     "react-icons": "^5.2.1",
     "react-image-crop": "^11.0.5",
     "react-modal": "^3.15.1",
-    "react-random-reveal": "^2.0.0",
     "react-responsive": "^9.0.0-beta.10",
     "typewriter-effect": "^2.21.0",
     "yet-another-react-lightbox": "^2.6.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
-    "gatsby-plugin-postcss": "^5.18.0",
-    "gh-pages": "^4.0.0",
+    "gatsby-plugin-postcss": "^6.16.0",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.6"
+  },
+  "allowScripts": {
+    "sharp": true
   },
   "homepage": "https://ethberlin.org"
 }

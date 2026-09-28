@@ -9,7 +9,7 @@ const Impressum = () => {
           CONTACT &amp; &lt;&lt;I&lt;MPRESSUM
         </h1>
         <div className="mt-4">
-          <p>
+          <div className="mb-6">
             Thoughts, questions, input or inquieries? We look forward to hearing
             from you!
             <ul className="mt-4 leading-4">
@@ -24,7 +24,7 @@ const Impressum = () => {
                 </a>
               </li>
             </ul>
-          </p>
+          </div>
         </div>
         <div className="text-sm">
           <h1 className="text-xl font-bold ">Impressum</h1>

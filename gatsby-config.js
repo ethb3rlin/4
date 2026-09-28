@@ -8,8 +8,12 @@ module.exports = {
     image: `/card.png?cache-break`,
   },
   plugins: [
-    "gatsby-plugin-image",
-    "gatsby-plugin-sitemap",
+    {
+      resolve: "gatsby-plugin-sitemap",
+      options: {
+        output: "/sitemap", // Version 6 writes to the site root; keep the old URL.
+      },
+    },
     "gatsby-plugin-postcss",
     {
       resolve: "gatsby-plugin-manifest",
@@ -23,17 +27,6 @@ module.exports = {
           },
         ], // Add or remove icon sizes as desired
       },
-    },
-    "gatsby-plugin-mdx",
-    "gatsby-plugin-sharp",
-    "gatsby-transformer-sharp",
-    {
-      resolve: "gatsby-source-filesystem",
-      options: {
-        name: "images",
-        path: "./src/images/",
-      },
-      __key: "images",
     },
     {
       resolve: "gatsby-source-filesystem",
