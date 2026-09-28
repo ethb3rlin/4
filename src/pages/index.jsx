@@ -2,11 +2,23 @@ import React, { useEffect, useRef, useState } from "react";
 import passface from "../assets/passface/passface.gif";
 import dod from "../assets/passface/dod.png";
 import Layout from "../components/Layout";
-import ETHBerlin from "../components/ETHBerlin";
 import { useBreakpoint } from "../components/useBreakpoint";
 import EthBerlinLogo from "../components/EthBerlinLogo";
 import EditionStamps from "../components/EditionStamps";
 import SEO from "../components/seo";
+
+const INTRO_KEYS = ["ArrowDown", "PageDown", " ", "Enter"];
+
+// Tiles of the archive index: href, visible label or MRZ key, and the name
+// read out. The first opens another site.
+const TILES = [
+  ["/gallery", "G", "ALLERY", "Gallery"],
+  ["/manifesto", "M", "ANIFESTO", "Manifesto"],
+  ["/schedule", "S", "CHEDULE", "Schedule"],
+];
+
+const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const Home = () => {
   // mouseover image passport
@@ -14,12 +26,11 @@ const Home = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const ethBerlinTextRef = useRef();
   const { isSm } = useBreakpoint("sm");
-  const [showNav, setShowNav] = useState(false);
 
   // https://medium.com/autodesk-tlv/smooth-text-scaling-in-javascript-css-a817ae8cc4c9
   useEffect(() => {
-    // Don't run on mobile
-    if (!isSm) {
+    // Don't run on mobile, nor for anyone who asked for less motion.
+    if (!isSm || reducedMotion()) {
       setShowSidebar(true);
       return;
     }
@@ -82,29 +93,56 @@ const Home = () => {
       if (translateX === 0) setShowSidebar(true);
     }
 
+    // A swipe moves the logo as the wheel does; so do the keys that scroll a
+    // page, which send it all the way (sendToTopLeft).
+    let touchY = 0;
+    function onTouchStart(e) {
+      touchY = e.touches[0].clientY;
+    }
+    function onTouchMove(e) {
+      if (showSidebar) return;
+      e.preventDefault();
+      const y = e.touches[0].clientY;
+      moveElementOnDelta((y - touchY) * 2);
+      touchY = y;
+    }
+    function onKeyDown(e) {
+      if (showSidebar || !INTRO_KEYS.includes(e.key)) return;
+      e.preventDefault();
+      sendToTopLeft();
+    }
+
     window.addEventListener("wheel", onMouseWheel, { passive: false });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    document.addEventListener("keydown", onKeyDown);
 
     return () => {
       window.removeEventListener("wheel", onMouseWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, [isSm, showSidebar]);
 
   function sendToTopLeft() {
-    const style = `translateX(0) translateY(0) scale(1)`;
-    ethBerlinTextRef.current.style.transform = style;
-    setShowSidebar(true);
+    const el = ethBerlinTextRef.current;
+    el.style.transition = "transform 0.6s ease";
+    el.style.transform = `translateX(0) translateY(0) scale(1)`;
+    setTimeout(() => setShowSidebar(true), 450);
   }
 
+  // The passport photo swaps between the seal and the face, at least 600 ms
+  // apart, and not at all under reduced motion.
   useEffect(() => {
-    const MAX_TIME = 2000; // Maximum interval between image changes
+    if (reducedMotion()) return undefined;
+    let timeoutId;
     const changeImage = () => {
       setImageSrcPass((current) => (current === dod ? passface : dod));
-      setTimeout(changeImage, Math.random() * MAX_TIME); // Reschedule with a new random interval
+      timeoutId = setTimeout(changeImage, 600 + Math.random() * 2000);
     };
-
-    const timeoutId = setTimeout(changeImage, Math.random() * MAX_TIME); // Initial scheduling
-
-    return () => clearTimeout(timeoutId); // Clear timeout on component unmount
+    timeoutId = setTimeout(changeImage, 600 + Math.random() * 2000);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   return (
@@ -117,16 +155,27 @@ const Home = () => {
       />
       {/* Scroll indicator */}
       <button
+        type="button"
+        aria-label="Enter site"
         className={`hidden ${
           showSidebar ? "hidden" : "sm:flex"
-        } text-black  fixed left-1/2 bottom-0 font-light flex-col -translate-x-1/2 z-20`}
+        } text-black fixed left-1/2 bottom-3 font-light flex-col items-center -translate-x-1/2 z-20`}
         onClick={sendToTopLeft}
       >
-        <span className="material-symbols-outlined text-6xl -mb-4 light-up">
+        <span
+          aria-hidden="true"
+          className="material-symbols-outlined text-6xl -mb-4 light-up"
+        >
           expand_more
         </span>
-        <span className="material-symbols-outlined text-6xl -mt-5 light-up-delayed">
+        <span
+          aria-hidden="true"
+          className="material-symbols-outlined text-6xl -mt-5 light-up-delayed"
+        >
           expand_more
+        </span>
+        <span aria-hidden="true" className="font-ocra text-xs mt-1.5">
+          SCROLL OR PRESS ↓
         </span>
       </button>
       <Layout
@@ -136,36 +185,71 @@ const Home = () => {
             : "fade-in-left visible opacity-100"
         } transition-opacity duration-2000 ease-in-out`}
       >
-        {/* Page content */}
-        <div className={`flex flex-col xl:flex-row-reverse`}>
-          {/* Right side Wolpy and faces */}
-          <div className="textbox my-8 xl:ml-8 text-black decorate-links flex justify-center items-center">
-            <div className="mt-4 mb-6 text-center">
-              <div className="flex flex-col items-center justify-center mb-4">
-                <img
-                  src={imageSrcPass}
-                  className="w-48 h-48 object-cover"
-                  alt="Fake passport image"
-                />
+        {/* Page content: the passport beside the text from 1280 px, above
+            it and compact below. */}
+        <div className="flex flex-col items-start gap-4 xl:flex-row-reverse xl:gap-8">
+          <div className="textbox text-black xl:w-80 xl:flex-none">
+            <div className="flex flex-row flex-wrap items-center justify-center gap-x-5 gap-y-1 text-left xl:flex-col xl:gap-0 xl:text-center">
+              <img
+                src={imageSrcPass}
+                className="w-28 h-28 sm:w-36 sm:h-36 xl:w-48 xl:h-48 xl:mb-4 object-cover"
+                alt=""
+              />
+              <div className="font-ocra text-sm leading-5 sm:text-base sm:leading-6">
+                <p className="my-0">Event: ETHBerlin04</p>
+                <p className="my-0">Theme: Identity Crisis</p>
+                <p className="my-0">Dates: May 24-26, 2024</p>
+                <p className="my-0">Location: CIC, Berlin</p>
               </div>
-              <p className="font-ocra my-0"> Event: ETHBerlin04</p>
-              <p className="font-ocra my-0"> Theme: Identity Crisis</p>
-              <p className="font-ocra my-0"> Dates: May 24-26, 2024</p>
-              <p className="font-ocra my-0"> Location: CIC, Berlin</p>
-              <EditionStamps />
+              <div className="w-full text-center">
+                <EditionStamps />
+              </div>
             </div>
           </div>
-          {/* Left side text box */}
-          <div className="textbox xl:w-2/3">
+          <div className="textbox min-w-0 max-w-[760px] xl:flex-1">
             <p>
               ETHBerlin was a hackathon, a cultural festival, an educational
               event, a platform for hacktivism, and a community initiative to
               push the decentralized ecosystem forward.
             </p>
 
+            <nav
+              aria-label="Archive"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6 font-ocra text-[15px] leading-5"
+            >
+              <a
+                href="https://projects.ethberlin.org/results/"
+                target="_blank"
+                rel="noreferrer"
+                className="flex justify-between gap-2 border border-black px-3.5 py-3 text-black no-underline hover:bg-black hover:text-white hover:no-underline"
+              >
+                <span className="sr-only">
+                  Projects and results (opens in a new tab)
+                </span>
+                <span aria-hidden="true">PROJECTS &amp; RESULTS</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+              {TILES.map(([href, key, rest, label]) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="border border-black px-3.5 py-3 text-black no-underline hover:bg-black hover:text-white hover:no-underline"
+                >
+                  <span className="sr-only">{label}</span>
+                  <span aria-hidden="true">
+                    &lt;&lt;<span className="text-berlin-red-text">{key}</span>
+                    &lt;{rest}
+                  </span>
+                </a>
+              ))}
+            </nav>
+
             <p>
-              You can find the projects that emerged during the hackathon
-              <a href="https://projects.ethberlin.org/results/"> here</a>.
+              You can find the projects that emerged during the hackathon{" "}
+              <a href="https://projects.ethberlin.org/results/">
+                on projects.ethberlin.org
+              </a>
+              .
             </p>
 
             <p>
@@ -186,17 +270,25 @@ const Home = () => {
 
             <p>
               To read our manifesto, press{" "}
-              <span className="font-ocra text-sm">
-                &lt;&lt;<span className="text-berlin-red">M</span>&lt;
-              </span>
+              <a
+                href="/manifesto"
+                aria-label="M, opens the manifesto"
+                className="font-ocra text-sm text-black"
+              >
+                &lt;&lt;<span className="text-berlin-red-text">M</span>&lt;
+              </a>
               .
             </p>
 
             <p>
               To see the photos from the hackathon, press{" "}
-              <span className="font-ocra text-sm">
-                &lt;&lt;<span className="text-berlin-red">G</span>&lt;
-              </span>
+              <a
+                href="/gallery"
+                aria-label="G, opens the gallery"
+                className="font-ocra text-sm text-black"
+              >
+                &lt;&lt;<span className="text-berlin-red-text">G</span>&lt;
+              </a>
               .
             </p>
 
@@ -204,7 +296,11 @@ const Home = () => {
               ETHBerlin is not a conference but a hackathon. Every attendee
               played an active role in the event.{" "}
               <b>All applications are closed</b>. ETHBerlin04 was part of the{" "}
-              <a href="https://blockchainweek.berlin" target="_blank">
+              <a
+                href="https://blockchainweek.berlin"
+                target="_blank"
+                rel="noreferrer"
+              >
                 blockchainweek.berlin
               </a>
               .
@@ -218,7 +314,7 @@ const Home = () => {
 
 export const Head = () => (
   <>
-    <SEO />
+    <SEO title="ETHBerlin04 · Identity Crisis · May 24–26, 2024" />
   </>
 );
 

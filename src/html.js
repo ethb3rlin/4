@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default function HTML(props) {
   return (
-    <html {...props.htmlAttributes}>
+    <html lang="en" {...props.htmlAttributes}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
@@ -14,64 +14,49 @@ export default function HTML(props) {
         <script
           dangerouslySetInnerHTML={{
             __html: `
-            document.onkeydown = checkKey;
+            document.addEventListener("keydown", checkKey);
 
             function checkKey(e) {
-                e = e || window.event;
-
-                // Check if any modifier keys are pressed
-                if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
-                  // Exit the function if any modifier keys are pressed
+                // A key held down, pressed with a modifier, or typed into a
+                // field is not a shortcut.
+                if (e.repeat || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
                   return;
                 }
+                var t = e.target;
+                if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) {
+                  return;
+                }
+                // The sidebar's SHORTCUTS button switches them off, remembered here.
+                try {
+                  if (localStorage.getItem("ethb4-shortcuts") === "off") {
+                    return;
+                  }
+                } catch (x) {}
 
-                switch (e.key.toLowerCase()) {
-                    case 'a':
-                        window.location.href= "/art";
-                        break;
-                    case 'e':
-                        window.location.href= "/experiences";
-                        break;
-                    case 'm':
-                        window.location.href= "/manifesto";
-                        break;
-                    case 'h':
-                        window.location.href= "/hacker-manual";
-                        break;
-                    case 'i':
-                        window.location.href= "/contact";
-                        break;
-                    case 'd':
-                        window.location.href= "https://dod.ngo";
-                        break;
-                    case 'o':
-                        window.location.href= "/code-of-conduct";
-                        break;
-                    case 'c':
-                        window.location.href= "/contributors";
-                        break;
-                    case 'p':
-                        window.location.href= "/privacy-policy";
-                        break;
-
-                    case 'f':
-                        window.location.href= "/face-idont";
-                        break;
-                    case 's':
-                        window.location.href= "/schedule";
-                        break;
-                    case 'v':
-                        window.location.href= "/venue";
-                        break;
-                    case 'b':
-                        window.location.href= "https://dod.ngo/blog";
-                        break;
-                    case 'g':
-                        window.location.href= "/gallery";
-                        break;
-                    default:
-                        // If key doesn't match any case, do nothing
-                        break;
+                var dest = {
+                    a: "/art",
+                    e: "/experiences",
+                    m: "/manifesto",
+                    h: "/hacker-manual",
+                    i: "/contact",
+                    d: "https://dod.ngo",
+                    o: "/code-of-conduct",
+                    c: "/contributors",
+                    p: "/privacy-policy",
+                    f: "/face-idont",
+                    s: "/schedule",
+                    v: "/venue",
+                    b: "https://dod.ngo/blog",
+                    g: "/gallery"
+                }[(e.key || "").toLowerCase()];
+                if (!dest) {
+                  return;
+                }
+                // Pages of this site open here; other sites open in a new tab.
+                if (dest.charAt(0) === "/") {
+                  window.location.href = dest;
+                } else {
+                  window.open(dest, "_blank", "noopener");
                 }
             }
             `,

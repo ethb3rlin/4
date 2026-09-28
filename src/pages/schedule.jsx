@@ -1,5 +1,7 @@
 import Layout from "../components/Layout";
+import ArchiveNote from "../components/ArchiveNote";
 import React from "react";
+import SEO from "../components/seo";
 import ReactModal from "react-modal";
 import "../styles/modal.css";
 import "../styles/rooms/groundFloor.css";
@@ -14,6 +16,7 @@ import fourthFloor from "../images/fourthFloor.png";
 import fifthFloor from "../images/fifthFloor.png";
 import ETHBerlin from "../components/ETHBerlin";
 import VenueMapModal from "../components/VenueMapModal";
+import LocationButton from "../components/LocationButton";
 import austin from "../assets/people/workshops/austin.jpeg";
 import sergei from "../assets/people/workshops/sergei.jpeg";
 import tino from "../assets/people/workshops/tino.jpeg";
@@ -33,199 +36,137 @@ import nick from "../assets/people/speakers/nick.jpeg";
 import peter from "../assets/people/speakers/peter.jpeg";
 import puja from "../assets/people/speakers/puja.jpeg";
 
-import { FaExternalLinkAlt, FaTwitter } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
 import { ImSoundcloud } from "react-icons/im";
 
-// let currentDate = new Date();
+// The day of each date, for the talk dialog.
+const DAYS = {
+  "2024-05-24": "Friday",
+  "2024-05-25": "Saturday",
+  "2024-05-26": "Sunday",
+};
 
-// Stop greying out
-const currentDate = new Date("2020-05-26T01:00:00+02:00");
-
-// setInterval(() => {
-//   currentDate = new Date();
-// }, 60000);
-
+// One entry as a row: the time in its own column, then the title, the
+// speaker and the rooms (design review, issues 34 and 37). A talk with a
+// description opens it in a dialog (issue 36). The event is over, so no row
+// marks itself as past or current.
 const ProgramItem = ({
   title,
   eventLocations,
   dayStr,
-  endDayStr,
   startTime,
   endTime,
   className,
   isExtravaganza,
-}) => {
-  // ISO Format: 2024-05-24T00:09:00+02:00
-  const startDate = new Date(dayStr + "T" + startTime + ":00+02:00");
-  const endDate = endTime
-    ? new Date(endDayStr || dayStr + "T" + endTime + ":00+02:00")
-    : startDate;
-
-  return (
-    <div
-      className={`${isExtravaganza ? "text-berlin-red" : ""} ${
-        currentDate > endDate
-          ? "text-gray-300"
-          : currentDate > startDate
-          ? "font-bold animate-pulse-faster"
-          : className
-      } list-none md:text-lg mt-3`}
-    >
-      <span className="fake-bold">
-        <span className="text-berlin-red opacity-50">{"> "}</span>
-        {startTime + (endTime ? "-" + endTime : "") + " -"}
-      </span>{" "}
-      {title}{" "}
-      {eventLocations.map((loc) => (
-        <button
-          className={`text-berlin-red ${
-            currentDate > endDate
-              ? "text-gray-300"
-              : currentDate > startDate
-              ? "font-bold animate-pulse-faster"
-              : className
-          } text-sm`}
-          onClick={() => {
-            loc.handler();
-          }}
-        >
-          <span className="align-middle">
-            <span class="material-symbols-outlined text-sm mr-0.5 ml-1">
-              my_location
-            </span>
-          </span>
-          <span className="underline">{loc.name}</span>
-        </button>
-      ))}
-    </div>
-  );
-};
-
-const SpeechItem = ({
-  className,
-  title,
-  eventLocations,
-  dayStr,
-  endDayStr,
-  startTime,
-  endTime,
-  description,
+  indent,
   speakerName,
-  photo,
-  photo2,
-  photo3,
+  description,
+  photos = [],
 }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const handleCloseModal = (e) => {
+  const titleId = React.useId();
+  const speaker = speakerName && speakerName !== "TBA" ? speakerName : null;
+  const time = startTime + (endTime ? "–" + endTime : "");
+  const close = (e) => {
     e.stopPropagation();
     setIsModalOpen(false);
   };
-  // ISO Format: 2024-05-24T00:09:00+02:00
-  const startDate = new Date(dayStr + "T" + startTime + ":00+02:00");
-  const endDate = endTime
-    ? new Date(endDayStr || dayStr + "T" + endTime + ":00+02:00")
-    : startDate;
-
   return (
-    <div>
-      <ProgramItem
-        title={title}
-        eventLocations={eventLocations}
-        dayStr={dayStr}
-        endDayStr={endDayStr}
-        startTime={startTime}
-        endTime={endTime}
-        className={className}
-      />
-      <div
-        className={`ml-8 text-sm ${
-          currentDate > endDate
-            ? "text-gray-300"
-            : currentDate > startDate
-            ? "font-bold animate-pulse-faster"
-            : ""
-        } ${className}`}
+    <li
+      className={`list-none m-0 max-w-none py-2.5 pr-0 ${
+        indent ? "pl-6" : "pl-0"
+      } grid grid-cols-[92px_minmax(0,1fr)] sm:grid-cols-[112px_minmax(0,1fr)] gap-x-4 border-b border-black/10`}
+    >
+      <time
+        dateTime={`${dayStr}T${startTime}`}
+        className="font-ocra text-sm leading-6"
       >
-        <span>
-          <span className="text-xs text-berlin-red opacity-50 mr-0.5">
-            {"> "}
-          </span>
-          {speakerName}
-        </span>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className={`underline ${
-            currentDate > endDate ? "text-gray-300" : "text-gray-500"
-          } mx-2`}
+        {time}
+      </time>
+      <div>
+        <div
+          className={`${isExtravaganza ? "text-berlin-red-text" : ""} ${
+            className || ""
+          }`}
         >
-          More Info
-        </button>
-      </div>
-      <ReactModal
-        isOpen={isModalOpen}
-        style={{
-          overlay: {
-            // Default styles
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(255, 255, 255, 0.5)",
-          },
-          content: {
-            zIndex: 40,
-            backgroundColor: "rgba(0, 0, 0, 0.9)",
-            margin: "auto",
-          },
-        }}
-        overlayClassName="flex items-center z-40 px-4 md:px-16 lg:px-32 xl:px-48 transition-all duration-200 ease-in-out py-8 max-h-screen"
-        className="flex flex-col items-center justify-center max-h-full"
-        shouldCloseOnEsc={true}
-        shouldCloseOnOverlayClick={true}
-        onRequestClose={handleCloseModal}
-        closeTimeoutMS={500}
-      >
-        <div className="p-8 font-w95 text-center overflow-y-auto max-w-4xl">
-          <div className="flex justify-end">
-            <button
-              className="text-4xl text-berlin-red"
-              onClick={() => setIsModalOpen(false)}
-            >
-              X
-            </button>
-          </div>
-          <div className="flex flex-row justify-center p-4 flex-wrap">
-            {photo && (
-              <img src={photo} className="h-32 md:h-64 self-center mx-4 my-4" />
-            )}
-            {photo2 && (
-              <img
-                src={photo2}
-                className="h-32 md:h-64 self-center mx-4 my-4"
-              />
-            )}
-            {photo3 && (
-              <img
-                src={photo3}
-                className="h-32 md:h-64 self-center mx-4 my-4"
-              />
-            )}
-          </div>
-          <div className="text-xl md:text-3xl font-bold my-4">{title}</div>
-          <div className="text-lg md:text-2xl">{speakerName}</div>
-          <div className="mt-8">{description}</div>
+          {title}
         </div>
-      </ReactModal>
-    </div>
+        {speaker && <div className="text-sm text-gray-700">{speaker}</div>}
+        {(eventLocations.length > 0 || description) && (
+          <div className="flex flex-wrap gap-2 mt-1.5">
+            {eventLocations.map((loc) => (
+              <LocationButton key={loc.name} loc={loc} />
+            ))}
+            {description && (
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                className="inline-flex items-center min-h-[32px] px-2.5 py-1 border border-[rgba(0,0,0,0.35)] hover:border-black bg-white text-sm"
+              >
+                About this talk
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+      {description && (
+        <ReactModal
+          isOpen={isModalOpen}
+          aria={{ labelledby: titleId }}
+          overlayClassName="fixed inset-0 z-40 flex items-center justify-center p-4 bg-[rgba(0,0,0,0.45)]"
+          className="relative w-full max-w-[720px] max-h-full overflow-y-auto bg-white text-black font-bundessans p-6 outline-none"
+          shouldCloseOnEsc={true}
+          shouldCloseOnOverlayClick={true}
+          onRequestClose={close}
+        >
+          <button
+            type="button"
+            onClick={close}
+            aria-label="Close"
+            className="absolute top-3 right-3 w-11 h-11 border border-black bg-white material-symbols-outlined !text-2xl !leading-none"
+          >
+            close
+          </button>
+          {photos.length > 0 && (
+            <div className="flex flex-wrap gap-3 mb-4">
+              {photos.map((photo) => (
+                <img
+                  key={photo}
+                  src={photo}
+                  alt={speaker || ""}
+                  className="w-28 h-28 object-cover"
+                />
+              ))}
+            </div>
+          )}
+          <p className="font-ocra text-[13px] leading-[18px] mb-1">
+            {DAYS[dayStr]} · {time}
+          </p>
+          <h2 id={titleId} className="text-2xl font-bold mr-14">
+            {title}
+          </h2>
+          {speaker && <p className="text-gray-700 mb-0">{speaker}</p>}
+          <div className="mt-4">{description}</div>
+        </ReactModal>
+      )}
+    </li>
   );
 };
+
+// A talk: a row with its speaker's photos for the dialog.
+const SpeechItem = ({ photo, photo2, photo3, ...item }) => (
+  <ProgramItem {...item} photos={[photo, photo2, photo3].filter(Boolean)} />
+);
+
+// A day's heading, with a rule under it.
+const DAY = "font-ocra text-xl pb-2 border-b border-black";
 
 const Program = () => {
   const [isMapModalOpen, setIsMapModalOpen] = React.useState(false);
   const [activeMap, setActiveMap] = React.useState(groundFloor);
   const [activeRoomClass, setActiveRoomClass] = React.useState("lexis");
   const [activeMapName, setActiveMapName] = React.useState("Ground Floor (#0)");
+  const [activeRoomName, setActiveRoomName] = React.useState("");
   const [extravaganzaActive, setExtravaganzaActive] = React.useState(false);
   const [isSticky, setIsSticky] = React.useState(false);
 
@@ -316,7 +257,7 @@ const Program = () => {
       },
     },
     mainEnterence: {
-      name: "Main Enterance",
+      name: "Main Entrance",
       handler: () => {
         handleGroundFloor();
         setActiveRoomClass("main-enterence");
@@ -388,7 +329,7 @@ const Program = () => {
       },
     },
     wellnessRoom: {
-      name: "Wellness & Planeterium",
+      name: "Wellness & Planetarium",
       handler: () => {
         handleFifthFloor();
         setActiveRoomClass("wellnessRoom");
@@ -413,6 +354,15 @@ const Program = () => {
     },
   };
 
+  // Each handler also names its room, which titles the map dialog.
+  for (const loc of Object.values(locations)) {
+    const show = loc.handler;
+    loc.handler = () => {
+      setActiveRoomName(loc.name);
+      show();
+    };
+  }
+
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       ([e]) =>
@@ -428,9 +378,8 @@ const Program = () => {
   return (
     <Layout>
       <div className="textbox">
-        <h1 className="my-4 underline text-secondary font-ocra">
-          &lt;&lt;S&lt;CHEDULE
-        </h1>
+        <h1 className="my-4 text-secondary font-ocra">&lt;&lt;S&lt;CHEDULE</h1>
+        <ArchiveNote />
         <div className="">
           <p className="mt-4">
             Welcome to <ETHBerlin />! If you have the chance, please claim your
@@ -442,39 +391,58 @@ const Program = () => {
           {/* Hacker Essentials vs Extravaganza */}
 
           <div
-            className={`flex items-center justify-center w-full sticky -top-1 py-4 text-center schedule-sticky ${
-              isSticky ? "bg-white" : ""
+            className={`flex flex-wrap items-center justify-between gap-3 w-full sticky -top-1 py-3 px-5 sm:px-8 schedule-sticky ${
+              isSticky
+                ? "bg-[rgba(255,255,255,0.97)] border-b border-[rgba(0,0,0,0.15)]"
+                : ""
             }`}
             ref={toggleRef}
           >
-            <label for="toogleA" className="flex items-center cursor-pointer">
-              <div className="mr-3 ">Hacker Essentials</div>
-              <div className="relative">
-                <input
-                  id="toogleA"
-                  type="checkbox"
-                  className="sr-only"
-                  onChange={() => setExtravaganzaActive((prev) => !prev)}
-                />
-                <div
-                  className={`w-10 h-4 ${
-                    extravaganzaActive ? "bg-red-500" : "bg-gray-400"
-                  } rounded-full shadow-inner`}
-                ></div>
-                <div
-                  className={`absolute w-6 h-6 rounded-full shadow -left-1 -top-1 transition ${
-                    extravaganzaActive
-                      ? "translate-x-full bg-red-300"
-                      : "bg-gray-200"
+            {/* Below 360 px the label wraps above the buttons, which stay together. */}
+            <div
+              role="group"
+              aria-label="Show"
+              className="flex flex-wrap items-center gap-y-2 font-ocra text-sm"
+            >
+              <span className="mr-2.5">SHOW</span>
+              <span className="flex">
+                <button
+                  type="button"
+                  aria-pressed={!extravaganzaActive}
+                  onClick={() => setExtravaganzaActive(false)}
+                  className={`border border-black px-2 min-[360px]:px-3 py-[9px] ${
+                    extravaganzaActive ? "bg-white" : "bg-black text-white"
                   }`}
-                ></div>
-              </div>
-              <div className="ml-3 text-red-300">Hacker Extravaganza</div>
-            </label>
+                >
+                  ESSENTIALS
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={extravaganzaActive}
+                  onClick={() => setExtravaganzaActive(true)}
+                  className={`border border-black border-l-0 px-2 min-[360px]:px-3 py-[9px] ${
+                    extravaganzaActive ? "bg-black text-white" : "bg-white"
+                  }`}
+                >
+                  EVERYTHING
+                </button>
+              </span>
+            </div>
+            <nav aria-label="Days" className="flex gap-1 font-ocra text-sm">
+              <a href="#fri" className="px-2 py-2.5 text-black">
+                FRI 24
+              </a>
+              <a href="#sat" className="px-2 py-2.5 text-black">
+                SAT 25
+              </a>
+              <a href="#sun" className="px-2 py-2.5 text-black">
+                SUN 26
+              </a>
+            </nav>
           </div>
-          <h2 className="text-xl font-bold font-ocra mt-4">Friday, May 24</h2>
-          <div className="mt-4 mb-6">
-            <ul>
+          <section id="fri" className="mt-8 scroll-mt-20">
+            <h2 className={DAY}>Friday, May 24</h2>
+            <ol className="mt-1">
               <ProgramItem
                 dayStr="2024-05-24"
                 startTime="12:00"
@@ -698,370 +666,396 @@ const Program = () => {
                 title="Midnight Snack"
                 eventLocations={[locations.restaurant]}
               />
-            </ul>
-          </div>
-          <div className="flex justify-center">
-            <div className="border-b-[1px] mb-8 mt-4 border-berlin-red opacity-40 w-full"></div>
-          </div>
-          <h2 className="text-xl font-bold font-ocra">Saturday, May 25th</h2>
-          <p className="mt-4">Happy hacking, no distractions!</p>
-          <div className="mt-4 mb-6">
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="00:00"
-              endTime="23:59"
-              title="Hacking"
-              className={"font-bold italic"}
-              eventLocations={[]}
-            />
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="09:00"
-              endTime="11:00"
-              title="Breakfast"
-              eventLocations={[locations.restaurant]}
-            />
-            {extravaganzaActive && (
+            </ol>
+          </section>
+          <section id="sat" className="mt-8 scroll-mt-20">
+            <h2 className={DAY}>Saturday, May 25</h2>
+            <p className="mt-3 mb-0 font-bold">
+              Happy hacking, no distractions!
+            </p>
+            <ol className="mt-1">
               <ProgramItem
                 dayStr="2024-05-25"
-                startTime="10:00"
-                endTime="11:30"
-                title="Kundalini yoga"
-                eventLocations={[locations.wellnessRoom]}
-                isExtravaganza
-              />
-            )}
-            <SpeechItem
-              dayStr="2024-05-25"
-              startTime="11:00"
-              endTime="13:00"
-              title="Project Pitches / Feedback Sessions"
-              description="Are you stuck, looking for another team member or want feedback on your idea? Join this session to pitch your project on stage or learn more about the projects others are working on!"
-              eventLocations={[locations.lexis]}
-            />
-            {extravaganzaActive && (
-              <ProgramItem
-                dayStr="2024-05-25"
-                startTime="11:00"
+                startTime="00:00"
                 endTime="23:59"
-                title="Art Exhibition: co-create"
-                eventLocations={[locations.artExhibition]}
-                isExtravaganza
+                title="Hacking"
+                className={"font-bold italic"}
+                eventLocations={[]}
               />
-            )}
-            {extravaganzaActive && (
               <ProgramItem
                 dayStr="2024-05-25"
-                startTime="12:00"
-                endTime="18:00"
-                title="Screenprinting and Matcha"
-                eventLocations={[locations.library]}
-                isExtravaganza
+                startTime="09:00"
+                endTime="11:00"
+                title="Breakfast"
+                eventLocations={[locations.restaurant]}
               />
-            )}
-            {extravaganzaActive && (
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="10:00"
+                  endTime="11:30"
+                  title="Kundalini yoga"
+                  eventLocations={[locations.wellnessRoom]}
+                  isExtravaganza
+                />
+              )}
               <SpeechItem
                 dayStr="2024-05-25"
-                startTime="12:00"
-                endTime="13:20"
-                isExtravaganza
-                title="Panel - Decentralized Art Organisation"
-                speakerName="Vincent Trasov, Benny Giang"
-                // photo={richard}
-                // photo2={ivan}
-                description={
-                  <>
-                    <div>
-                      Panel - Decentralized Art Organisation: With Vincent
-                      Trasov and Benny Giang; Moderated by Stina Gustafsson.
-                    </div>
-                  </>
-                }
-                // photo={shumoChu}
-                eventLocations={[locations.artExhibition]}
+                startTime="11:00"
+                endTime="13:00"
+                title="Project Pitches / Feedback Sessions"
+                description="Are you stuck, looking for another team member or want feedback on your idea? Join this session to pitch your project on stage or learn more about the projects others are working on!"
+                eventLocations={[locations.lexis]}
               />
-            )}
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="13:00"
-              endTime="15:00"
-              title="Lunch"
-              eventLocations={[locations.restaurant]}
-            />
-            {extravaganzaActive && (
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="11:00"
+                  endTime="23:59"
+                  title="Art Exhibition: co-create"
+                  eventLocations={[locations.artExhibition]}
+                  isExtravaganza
+                />
+              )}
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="12:00"
+                  endTime="18:00"
+                  title="Screenprinting and Matcha"
+                  eventLocations={[locations.library]}
+                  isExtravaganza
+                />
+              )}
+              {extravaganzaActive && (
+                <SpeechItem
+                  dayStr="2024-05-25"
+                  startTime="12:00"
+                  endTime="13:20"
+                  isExtravaganza
+                  title="Panel - Decentralized Art Organisation"
+                  speakerName="Vincent Trasov, Benny Giang"
+                  // photo={richard}
+                  // photo2={ivan}
+                  description={
+                    <>
+                      <div>
+                        Panel - Decentralized Art Organisation: With Vincent
+                        Trasov and Benny Giang; Moderated by Stina Gustafsson.
+                      </div>
+                    </>
+                  }
+                  // photo={shumoChu}
+                  eventLocations={[locations.artExhibition]}
+                />
+              )}
               <ProgramItem
                 dayStr="2024-05-25"
                 startTime="13:00"
                 endTime="15:00"
-                title="Reiki practitioner available"
-                isExtravaganza
-                eventLocations={[locations.wellnessRoom]}
+                title="Lunch"
+                eventLocations={[locations.restaurant]}
               />
-            )}
-            {extravaganzaActive && (
-              <SpeechItem
-                dayStr="2024-05-25"
-                startTime="13:30"
-                endTime="14:50"
-                isExtravaganza
-                title="Panel - Art after NFTs"
-                speakerName="Joan Heemskerk, Billy Rennekamp"
-                // photo={richard}
-                // photo2={ivan}
-                description={
-                  <>
-                    <div>
-                      Panel - Art after NFTs: With Joan Heemskerk and Billy
-                      Rennekamp; Moderated by María Paula Fernández.
-                    </div>
-                  </>
-                }
-                // photo={shumoChu}
-                eventLocations={[locations.artExhibition]}
-              />
-            )}
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="14:00"
-              endTime="17:00"
-              title="Mentoring Expert Office Hours"
-              description="Check mentor area for detailed schedule!"
-              eventLocations={[locations.nodeCafe]}
-            />
-            {extravaganzaActive && (
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="13:00"
+                  endTime="15:00"
+                  title="Reiki practitioner available"
+                  isExtravaganza
+                  eventLocations={[locations.wellnessRoom]}
+                />
+              )}
+              {extravaganzaActive && (
+                <SpeechItem
+                  dayStr="2024-05-25"
+                  startTime="13:30"
+                  endTime="14:50"
+                  isExtravaganza
+                  title="Panel - Art after NFTs"
+                  speakerName="Joan Heemskerk, Billy Rennekamp"
+                  // photo={richard}
+                  // photo2={ivan}
+                  description={
+                    <>
+                      <div>
+                        Panel - Art after NFTs: With Joan Heemskerk and Billy
+                        Rennekamp; Moderated by María Paula Fernández.
+                      </div>
+                    </>
+                  }
+                  // photo={shumoChu}
+                  eventLocations={[locations.artExhibition]}
+                />
+              )}
               <ProgramItem
                 dayStr="2024-05-25"
-                startTime="15:00"
-                endTime="16:30"
-                title="Sound healing practice"
-                isExtravaganza
-                eventLocations={[locations.wellnessRoom]}
-              />
-            )}
-            {extravaganzaActive && (
-              <ProgramItem
-                dayStr="2024-05-25"
-                startTime="16:00"
+                startTime="14:00"
                 endTime="17:00"
-                title="Privacy Corner: Project Pitches and Feedback Session"
-                isExtravaganza
-                eventLocations={[locations.library]}
+                title="Mentoring Expert Office Hours"
+                description="Check mentor area for detailed schedule!"
+                eventLocations={[locations.nodeCafe]}
               />
-            )}
-            {extravaganzaActive && (
-              <ProgramItem
-                dayStr="2024-05-25"
-                startTime="17:00"
-                endTime="19:00"
-                title="Yoga flow + Sound Bath"
-                isExtravaganza
-                eventLocations={[locations.wellnessRoom]}
-              />
-            )}
-            {extravaganzaActive && (
-              <div isExtravaganza>
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="15:00"
+                  endTime="16:30"
+                  title="Sound healing practice"
+                  isExtravaganza
+                  eventLocations={[locations.wellnessRoom]}
+                />
+              )}
+              {extravaganzaActive && (
+                <ProgramItem
+                  dayStr="2024-05-25"
+                  startTime="16:00"
+                  endTime="17:00"
+                  title="Privacy Corner: Project Pitches and Feedback Session"
+                  isExtravaganza
+                  eventLocations={[locations.library]}
+                />
+              )}
+              {extravaganzaActive && (
                 <ProgramItem
                   dayStr="2024-05-25"
                   startTime="17:00"
-                  endDayStr="2024-05-26"
-                  endTime="01:00"
-                  title="DJs in Courtyard 1"
-                  eventLocations={[locations.yard0]}
+                  endTime="19:00"
+                  title="Yoga flow + Sound Bath"
                   isExtravaganza
+                  eventLocations={[locations.wellnessRoom]}
                 />
-                <div className="ml-12">
+              )}
+              {extravaganzaActive && (
+                <>
                   <ProgramItem
                     dayStr="2024-05-25"
                     startTime="17:00"
-                    isExtravaganza
-                    endTime="19:00"
-                    title={
-                      <span className="inline-flex items-center">
-                        Jommi & Francesco{" "}
-                        <a
-                          href="https://twitter.com/joakimhi"
-                          className="ml-2 inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaTwitter />
-                        </a>
-                        &
-                        <a
-                          href="https://x.com/fmelp"
-                          className="inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaTwitter />
-                        </a>
-                      </span>
-                    }
-                    eventLocations={[locations.yard0]}
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="19:00"
-                    endTime="21:00"
-                    isExtravaganza
-                    title={
-                      <span className="inline-flex items-center">
-                        Anna{" "}
-                        <a
-                          href="https://soundcloud.com/innermost3000"
-                          className="ml-2 inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ImSoundcloud />
-                        </a>
-                        <a
-                          href="https://twitter.com/annmehr"
-                          className="ml-2 inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaTwitter />
-                        </a>
-                      </span>
-                    }
-                    eventLocations={[locations.yard0]}
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="21:00"
-                    endTime="23:00"
-                    isExtravaganza
-                    title={
-                      <span className="inline-flex items-center">
-                        Manu +{" "}
-                        <a
-                          href="https://twitter.com/blockravers"
-                          className="ml-2 inline-flex items-center opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          @blockravers <FaTwitter className="ml-2" />
-                        </a>
-                      </span>
-                    }
-                    eventLocations={[locations.yard0]}
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
                     endDayStr="2024-05-26"
-                    startTime="23:00"
                     endTime="01:00"
-                    isExtravaganza
-                    title={
-                      <span className="inline-flex items-center">
-                        Manuel{" "}
-                        <a
-                          href="https://soundcloud.com/umcharra"
-                          className="ml-2 inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ImSoundcloud />
-                        </a>
-                      </span>
-                    }
+                    title="DJs in Courtyard 1"
                     eventLocations={[locations.yard0]}
+                    isExtravaganza
                   />
-                </div>
-              </div>
-            )}
-            {extravaganzaActive && (
-              <ProgramItem
-                dayStr="2024-05-25"
-                startTime="18:00"
-                endTime="23:59"
-                title="Cocktails @Cinebar"
-                eventLocations={[locations.cinebar]}
-                isExtravaganza
-              />
-            )}
-            {extravaganzaActive && (
-              <>
+                  <>
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="17:00"
+                      isExtravaganza
+                      endTime="19:00"
+                      title={
+                        <span className="inline-flex items-center">
+                          Jommi & Francesco{" "}
+                          <a
+                            href="https://twitter.com/joakimhi"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="sr-only">
+                              X / Twitter (opens in a new tab)
+                            </span>
+                            <FaTwitter aria-hidden="true" />
+                          </a>
+                          &
+                          <a
+                            href="https://x.com/fmelp"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="sr-only">
+                              X / Twitter (opens in a new tab)
+                            </span>
+                            <FaTwitter aria-hidden="true" />
+                          </a>
+                        </span>
+                      }
+                      eventLocations={[locations.yard0]}
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="19:00"
+                      endTime="21:00"
+                      isExtravaganza
+                      title={
+                        <span className="inline-flex items-center">
+                          Anna{" "}
+                          <a
+                            href="https://soundcloud.com/innermost3000"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="sr-only">
+                              SoundCloud (opens in a new tab)
+                            </span>
+                            <ImSoundcloud aria-hidden="true" />
+                          </a>
+                          <a
+                            href="https://twitter.com/annmehr"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="sr-only">
+                              X / Twitter (opens in a new tab)
+                            </span>
+                            <FaTwitter aria-hidden="true" />
+                          </a>
+                        </span>
+                      }
+                      eventLocations={[locations.yard0]}
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="21:00"
+                      endTime="23:00"
+                      isExtravaganza
+                      title={
+                        <span className="inline-flex items-center">
+                          Manu +{" "}
+                          <a
+                            href="https://twitter.com/blockravers"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            @blockravers{" "}
+                            <span className="sr-only">
+                              on X / Twitter (opens in a new tab)
+                            </span>
+                            <FaTwitter aria-hidden="true" className="ml-2" />
+                          </a>
+                        </span>
+                      }
+                      eventLocations={[locations.yard0]}
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      endDayStr="2024-05-26"
+                      startTime="23:00"
+                      endTime="01:00"
+                      isExtravaganza
+                      title={
+                        <span className="inline-flex items-center">
+                          Manuel{" "}
+                          <a
+                            href="https://soundcloud.com/umcharra"
+                            className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span className="sr-only">
+                              SoundCloud (opens in a new tab)
+                            </span>
+                            <ImSoundcloud aria-hidden="true" />
+                          </a>
+                        </span>
+                      }
+                      eventLocations={[locations.yard0]}
+                    />
+                  </>
+                </>
+              )}
+              {extravaganzaActive && (
                 <ProgramItem
                   dayStr="2024-05-25"
-                  startTime="19:15"
-                  endTime="01:40"
-                  endDayStr="2024-05-26"
-                  title="Cinema"
-                  eventLocations={[locations.cinema]}
+                  startTime="18:00"
+                  endTime="23:59"
+                  title="Cocktails @Cinebar"
+                  eventLocations={[locations.cinebar]}
                   isExtravaganza
                 />
-                <div className="ml-12">
+              )}
+              {extravaganzaActive && (
+                <>
                   <ProgramItem
                     dayStr="2024-05-25"
-                    startTime="17:15"
-                    endTime="18:35"
-                    title="Terms and Conditions May Apply (Documentary, 2013)"
-                    eventLocations={[locations.cinema]}
-                    isExtravaganza
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="18:45"
-                    endTime="20:12"
-                    title="All Creatures Welcome (Documentary, 2018)"
-                    eventLocations={[locations.cinema]}
-                    isExtravaganza
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="20:15"
-                    endTime="22:21"
-                    title="Sneakers (Comedy/Crime, 1992)"
-                    eventLocations={[locations.cinema]}
-                    isExtravaganza
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="22:30"
-                    endTime="23:51"
-                    title="Idiocracy (Comedy/SciFi, 2006)"
-                    eventLocations={[locations.cinema]}
-                    isExtravaganza
-                  />
-                  <ProgramItem
-                    dayStr="2024-05-25"
-                    startTime="23:59"
+                    startTime="19:15"
                     endTime="01:40"
                     endDayStr="2024-05-26"
-                    title="Sans Soleil (Documentary, 1983)"
+                    title="Cinema"
                     eventLocations={[locations.cinema]}
                     isExtravaganza
                   />
-                </div>
-              </>
-            )}
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="19:00"
-              endTime="21:00"
-              title="Dinner"
-              eventLocations={[locations.restaurant]}
-            />
-            <ProgramItem
-              dayStr="2024-05-25"
-              startTime="23:59"
-              endDayStr="2024-05-26"
-              endTime="01:00"
-              title="Midnight Snack"
-              eventLocations={[locations.restaurant]}
-            />
-          </div>
-          <div className="flex justify-center">
-            <div className="border-b-[1px] mb-8 mt-4 border-berlin-red opacity-40 w-full"></div>
-          </div>
-          <h2 className="text-xl font-bold font-ocra">Sunday, May 26th</h2>
-          <p className="mt-4">
-            Don't forget to submit your projects by 11:30 am Berlin time!
-          </p>
-          <div className="mt-4 mb-6">
-            <ul>
+                  <>
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="17:15"
+                      endTime="18:35"
+                      title="Terms and Conditions May Apply (Documentary, 2013)"
+                      eventLocations={[locations.cinema]}
+                      isExtravaganza
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="18:45"
+                      endTime="20:12"
+                      title="All Creatures Welcome (Documentary, 2018)"
+                      eventLocations={[locations.cinema]}
+                      isExtravaganza
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="20:15"
+                      endTime="22:21"
+                      title="Sneakers (Comedy/Crime, 1992)"
+                      eventLocations={[locations.cinema]}
+                      isExtravaganza
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="22:30"
+                      endTime="23:51"
+                      title="Idiocracy (Comedy/SciFi, 2006)"
+                      eventLocations={[locations.cinema]}
+                      isExtravaganza
+                    />
+                    <ProgramItem
+                      indent
+                      dayStr="2024-05-25"
+                      startTime="23:59"
+                      endTime="01:40"
+                      endDayStr="2024-05-26"
+                      title="Sans Soleil (Documentary, 1983)"
+                      eventLocations={[locations.cinema]}
+                      isExtravaganza
+                    />
+                  </>
+                </>
+              )}
+              <ProgramItem
+                dayStr="2024-05-25"
+                startTime="19:00"
+                endTime="21:00"
+                title="Dinner"
+                eventLocations={[locations.restaurant]}
+              />
+              <ProgramItem
+                dayStr="2024-05-25"
+                startTime="23:59"
+                endDayStr="2024-05-26"
+                endTime="01:00"
+                title="Midnight Snack"
+                eventLocations={[locations.restaurant]}
+              />
+            </ol>
+          </section>
+          <section id="sun" className="mt-8 scroll-mt-20">
+            <h2 className={DAY}>Sunday, May 26</h2>
+            <p className="mt-3 mb-0 font-bold">
+              Don't forget to submit your projects by 11:30 am Berlin time!
+            </p>
+            <ol className="mt-1">
               <ProgramItem
                 dayStr="2024-05-26"
                 startTime="00:00"
@@ -1270,8 +1264,9 @@ Then we will look at tools and techniques we can use to govern and sustain crypt
                 title={"Closing aperitif, snacks & mingle with DJ"}
                 eventLocations={[locations.yard0]}
               />
-              <div className="ml-12">
+              <>
                 <ProgramItem
+                  indent
                   dayStr="2024-05-26"
                   startTime="19:00"
                   endTime="20:00"
@@ -1280,17 +1275,20 @@ Then we will look at tools and techniques we can use to govern and sustain crypt
                       YaNKeY{" "}
                       <a
                         href="https://on.soundcloud.com/cEYw4"
-                        className="ml-2 inline-block opacity-70 hover:opacity-100 text-berlin-red hover:text-berlin-red"
+                        className="ml-1.5 inline-flex items-center gap-1 p-1 align-middle text-berlin-red-text"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <ImSoundcloud />
+                        <span className="sr-only">
+                          SoundCloud (opens in a new tab)
+                        </span>
+                        <ImSoundcloud aria-hidden="true" />
                       </a>
                     </span>
                   }
                   eventLocations={[locations.yard0]}
                 />
-              </div>
+              </>
 
               <ProgramItem
                 dayStr="2024-05-26"
@@ -1307,23 +1305,21 @@ Then we will look at tools and techniques we can use to govern and sustain crypt
                   isExtravaganza
                   title={
                     <span>
-                      After Party
+                      After Party ·{" "}
                       <a
                         href="https://aedenberlin.com"
-                        target="blank"
+                        target="_blank"
                         rel="noreferrer noopener"
-                        className="text-sm inline-flex items-center ml-2 text-berlin-red"
                       >
-                        <FaExternalLinkAlt className="mr-[2px]" />{" "}
-                        <strong>Aeden</strong>
+                        Aeden ↗
                       </a>
                     </span>
                   }
                   eventLocations={[]}
                 />
               )}
-            </ul>
-          </div>
+            </ol>
+          </section>
         </div>
       </div>
 
@@ -1333,8 +1329,11 @@ Then we will look at tools and techniques we can use to govern and sustain crypt
         activeMapName={activeMapName}
         activeMap={activeMap}
         activeRoomClass={activeRoomClass}
+        roomName={activeRoomName}
       />
     </Layout>
   );
 };
+export const Head = () => <SEO title="Schedule · ETHBerlin04" />;
+
 export default Program;

@@ -1,19 +1,22 @@
 import React from "react";
+import SEO from "../components/seo";
 import Layout from "../components/Layout";
+import ArchiveNote from "../components/ArchiveNote";
 import VenueMapModal from "../components/VenueMapModal";
+import LocationButton from "../components/LocationButton";
 import groundFloor from "../images/groundFloor.png";
 import firstFloor from "../images/firstFloor.png";
 import secondFloor from "../images/secondFloor.png";
 import thirdFloor from "../images/thirdFloor.png";
 import fourthFloor from "../images/fourthFloor.png";
 import fifthFloor from "../images/fifthFloor.png";
-import { FaExternalLinkAlt } from "react-icons/fa";
 
 const Experiences = () => {
   const [isMapModalOpen, setIsMapModalOpen] = React.useState(false);
   const [activeMap, setActiveMap] = React.useState(groundFloor);
   const [activeMapName, setActiveMapName] = React.useState("Ground Floor (#0)");
   const [activeRoomClass, setActiveRoomClass] = React.useState("lexis");
+  const [activeRoomName, setActiveRoomName] = React.useState("");
 
   const handleCloseModal = (e) => {
     e.stopPropagation();
@@ -100,7 +103,7 @@ const Experiences = () => {
       },
     },
     mainEnterence: {
-      name: "Main Enterance",
+      name: "Main Entrance",
       handler: () => {
         handleGroundFloor();
         setActiveRoomClass("main-enterence");
@@ -172,7 +175,7 @@ const Experiences = () => {
       },
     },
     wellnessRoom: {
-      name: "Wellness & Planeterium",
+      name: "Wellness & Planetarium",
       handler: () => {
         handleFifthFloor();
         setActiveRoomClass("wellnessRoom");
@@ -197,26 +200,20 @@ const Experiences = () => {
     },
   };
 
-  const LocationButton = ({ loc, className }) => (
-    <button
-      className={`text-berlin-red inline-flex flex-wrap items-center font-bold`}
-      onClick={() => {
-        loc.handler();
-      }}
-    >
-      <span class="material-symbols-outlined mr-0.5 ml-1 text-[1.2rem]">
-        my_location
-      </span>
-      <span className="hover:underline text-[1rem]">{loc.name}</span>
-    </button>
-  );
+  // Each handler also names its room, which titles the map dialog.
+  for (const loc of Object.values(locations)) {
+    const show = loc.handler;
+    loc.handler = () => {
+      setActiveRoomName(loc.name);
+      show();
+    };
+  }
 
   return (
     <Layout>
-      <div className="textbox">
-        <h1 className="text-secondary underline font-ocra">
-          &lt;&lt;E&lt;XPERIENCES
-        </h1>
+      <div className="textbox max-w-[760px]">
+        <h1 className="text-secondary font-ocra">&lt;&lt;E&lt;XPERIENCES</h1>
+        <ArchiveNote />
         <h2 className="text-2xl mt-8 font-bold">ETHBerlin04 Experiences</h2>
         <p>
           ETHBerlin is a hackathon first but not a hackathon only. Like the last
@@ -228,45 +225,47 @@ const Experiences = () => {
 
         <div>
           <div>
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Gift Shop</h3>
-              <span>hosted by</span>
-              <a
-                href="https://dod.ngo"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                DoD
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Gift Shop</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://dod.ngo"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  DoD
+                </a>
+              </span>
               <LocationButton loc={locations.giftShop} />
             </div>
-            <div className="ml-4">
+            <div>
               Grab our iconic ETHBerlin04 swag and goodies from some of our
               experience hosts at the gift shop!
             </div>
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Cafe & Books</h3>
-              <span>hosted by</span>
-              <a
-                href="https://www.eigenlayer.xyz/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Eigenlayer
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Cafe & Books</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://www.eigenlayer.xyz/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Eigenlayer
+                </a>
+              </span>
               <LocationButton loc={locations.nodeCafe} />
             </div>
-            <div className="ml-4">
+            <div>
               <div>
                 Get your day started with coffee and a good read on blockchain
                 essentials.
               </div>
-              <ul className="list-disc list-inside ml-4 mt-2 ">
+              <ul className="mt-2">
                 <li>Saturday: 09:00 - 16:00</li>
                 <li>Sunday: 09:00 - 12:00</li>
               </ul>
@@ -274,22 +273,23 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">
-                Wellness Room by Day, Planetarium by Night
-              </h3>
-              <span>hosted by</span>
-              <a
-                href="https://scroll.io/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Scroll
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">
+              Wellness Room by Day, Planetarium by Night
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://scroll.io/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Scroll
+                </a>
+              </span>
               <LocationButton loc={locations.wellnessRoom} />
             </div>
-            <div className="ml-4">
+            <div>
               <div>
                 On the fifth floor we’ll host yoga, reiki, meditation and
                 breathwork sessions throughout the weekend so hackers can rewind
@@ -297,14 +297,14 @@ const Experiences = () => {
                 night, with areas for hackers to sleep or unwind.
               </div>
               <div className="mt-4 mb-1">Saturday 25th:</div>
-              <ul className="list-disc list-inside ml-4 ">
+              <ul>
                 <li>10:00 - 11:30 - Kundalini yoga</li>
                 <li>13:00 - 15:00 - Reiki practitioner available</li>
                 <li>15:00 - 16:30 - Sound healing practice</li>
                 <li>17:00 - 19:00 - Yoga flow + Sound Bath</li>
               </ul>
               <div className="mt-4 mb-1">Sunday 26th:</div>
-              <ul className="list-disc list-inside ml-4 ">
+              <ul>
                 <li>10:00 - 10:45 Active/dance meditation</li>
                 <li>10:45 - 11:30 Vibro Acoustic massage 1:1 first slot</li>
                 <li>11:45 - 12:30 Vibro acoustic massage 1:1 2nd slot</li>
@@ -313,20 +313,21 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Screen Printing</h3>
-              <span>hosted by</span>
-              <a
-                href="https://www.lens.xyz/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Lens
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Screen Printing</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://www.lens.xyz/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Lens
+                </a>
+              </span>
               <LocationButton loc={locations.library} />
             </div>
-            <div className="ml-4">
+            <div>
               Family Style, located in the Library, invites hackers to relax,
               have some matcha, get some Lens swag live-screen printed by a
               local Berliner screen printer.
@@ -334,19 +335,20 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Pizza Delivery</h3>
-              <span>by</span>
-              <a
-                href="https://www.base.org/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Base
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Pizza Delivery</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://www.base.org/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Base
+                </a>
+              </span>
             </div>
-            <div className="ml-4">
+            <div>
               Pizza will be served on Saturday, after 22 hs. Stay tuned for the
               mic call, and make sure to get some napkins, greasy fingers
               guaranteed. :)
@@ -354,20 +356,21 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Co-Create</h3>
-              <span>hosted by</span>
-              <a
-                href="https://www.refractionfestival.com/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Refraction
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Co-Create</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://www.refractionfestival.com/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Refraction
+                </a>
+              </span>
               <LocationButton loc={locations.artExhibition} />
             </div>
-            <div className="ml-4 decorate-links">
+            <div>
               <div>
                 Art exhibition curated by Department of Decentralization and
                 Refraction.
@@ -394,19 +397,20 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">THC @ETHBerlin04</h3>
-              <span>hosted by</span>
-              <a
-                href="https://www.dist0rtion.com/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Social Dist0rtion Protocol
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">THC @ETHBerlin04</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://www.dist0rtion.com/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Social Dist0rtion Protocol
+                </a>
+              </span>
             </div>
-            <div className="ml-4">
+            <div>
               Social Dist0rtion Protocol (SDP) where the first "o" in
               "distortion" is a zero, have an important message for you. Their
               upcoming special operation will unfold at ETHBerlin04, where they
@@ -415,22 +419,23 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">
-                Cocktails at the Cinebar
-              </h3>
-              <span>hosted by</span>
-              <a
-                href="https://celestia.org/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Celestia
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">
+              Cocktails at the Cinebar
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://celestia.org/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Celestia
+                </a>
+              </span>
               <LocationButton loc={locations.cinebar} />
             </div>
-            <div className="ml-4">
+            <div>
               Celestia will be serving what they do best: vibes, games and some
               fine cocktails. Starting from 6pm on Saturday you’ll be able to
               take a break from your computer and mingle with other teams,
@@ -439,20 +444,21 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Cypherpunk Cinema</h3>
-              <span>by</span>
-              <a
-                href="https://dod.ngo"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                DoD
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Cypherpunk Cinema</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://dod.ngo"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  DoD
+                </a>
+              </span>
               <LocationButton loc={locations.cinema} />
             </div>
-            <div className="ml-4">
+            <div>
               For newbies to our hackathon series, our amazing venue is blessed
               with a cinema and very comfy couches for the ultimate viewing
               experience. As per ETHBerlin³, we will be curating the cinema on
@@ -461,28 +467,28 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Görli On-Chain</h3>
-              <span>hosted by</span>
-              <a
-                href="https://infura.io/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1 mr-1"
-              >
-                Infura
-              </a>
-              &
-              <a
-                href="https://consensys.io/diligence/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Consensys Diligence
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Görli On-Chain</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                Hosted by{" "}
+                <a
+                  href="https://infura.io/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Infura
+                </a>{" "}
+                &{" "}
+                <a
+                  href="https://consensys.io/diligence/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Consensys Diligence
+                </a>
+              </span>
             </div>
-            <div className="ml-4">
+            <div>
               Join the Decentralized Infrastructure Network (DIN) and Consensys
               Diligence team for a Smart Contract Capture the Flag (CTF)
               Farcaster Frames challenge to solve riddles and mint a limited
@@ -493,20 +499,21 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Teledisko</h3>
-              <span>by</span>
-              <a
-                href="https://www.teledisko.com/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                TelediskoDAO
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Teledisko</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://www.teledisko.com/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  TelediskoDAO
+                </a>
+              </span>
               <LocationButton loc={locations.yard0} />
             </div>
-            <div className="ml-4">
+            <div>
               The teledisko needs no further explanation. Brought to you by
               telediskoDAO, it’s the smallest disco on earth - literally an
               upcycled telephone booth with a disco in it.
@@ -514,42 +521,44 @@ const Experiences = () => {
           </div>
 
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">Donut Wall</h3>
-              <span>by</span>
-              <a
-                href="https://missing-link.io/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Missing Link
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">Donut Wall</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://missing-link.io/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Missing Link
+                </a>
+              </span>
               <LocationButton loc={locations.yard0} />
             </div>
-            <div className="ml-4">
+            <div>
               Back by popular demand is the donut wall! It’s exactly what it
               says on the tin - A wall of donuts for you to get your sugar hit
               during the weekend.
             </div>
           </div>
           <div className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">
-                ETHBerlin Privacy Corner
-              </h3>
-              <span>by</span>
-              <a
-                href="https://c24ber.web3privacy.info"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Web3 Privacy now
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">
+              ETHBerlin Privacy Corner
+            </h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://c24ber.web3privacy.info"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Web3 Privacy now
+                </a>
+              </span>
               <LocationButton loc={locations.library} />
             </div>
-            <div className="ml-4">
+            <div>
               Hacker-focused safe space where you can get productive feedback on
               your hackathon project idea, its privacy features, and general
               viability. The Web3 Privacy team will be available throughout the
@@ -561,44 +570,43 @@ const Experiences = () => {
             </div>
           </div>
           <div id="party" className="mt-8">
-            <div className="inline-flex flex-wrap items-center">
-              <h3 className="font-bold text-lg mr-1">After party</h3>
-              <span>by</span>
-              <a
-                href="https://entropy.xyz/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Entropy
-              </a>{" "}
-              &{" "}
-              <a
-                href="https://fuel.network/"
-                target="blank"
-                rel="noreferrer noopener"
-                className="underline ml-1"
-              >
-                Fuel
-              </a>
-              <a
-                href="https://aedenberlin.com"
-                target="blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center ml-2 text-berlin-red"
-              >
-                <FaExternalLinkAlt className="mr-[2px]" />{" "}
-                <strong>Aeden</strong>
-              </a>
+            <h3 className="font-bold text-xl mb-0.5">After party</h3>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mb-2 text-[15px] leading-[22px] text-gray-700">
+              <span>
+                By{" "}
+                <a
+                  href="https://entropy.xyz/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Entropy
+                </a>{" "}
+                &{" "}
+                <a
+                  href="https://fuel.network/"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Fuel
+                </a>{" "}
+                ·{" "}
+                <a
+                  href="https://aedenberlin.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Aeden ↗
+                </a>
+              </span>
             </div>
-            <div className="ml-4">
+            <div>
               <em>From 8PM onwards on Sunday night.</em>
             </div>
-            <div className="ml-4">
+            <div>
               It would not be a hackathon without an after party. It would also
               not be Berlin without a dose of techno.
             </div>
-            <div className="ml-4">
+            <div>
               You will receive an after-party wristband during the hackathon
               registration. If you don't want to or cannot attend on Sunday
               evening, you can share it with your friends.
@@ -612,10 +620,13 @@ const Experiences = () => {
           activeMapName={activeMapName}
           activeMap={activeMap} // only ground floor
           activeRoomClass={activeRoomClass}
+          roomName={activeRoomName}
         />
       </div>
     </Layout>
   );
 };
+
+export const Head = () => <SEO title="Experiences · ETHBerlin04" />;
 
 export default Experiences;

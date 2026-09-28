@@ -1,13 +1,14 @@
 import Layout from "../components/Layout";
 import React from "react";
+import SEO from "../components/seo";
 
 const Privacy = () => (
   <Layout>
-    <div className="textbox">
-      <h1 className="my-4 underline text-secondary font-ocra">
+    <div className="textbox max-w-[760px]">
+      <h1 className="my-4 text-secondary font-ocra">
         PRIVACY &lt;&lt;P&lt;OLICY
       </h1>
-      <div className="text-justify decorate-links">
+      <div>
         <p className="mt-2">
           We are delighted that you have chosen to visit our website or take part
           at one of our events. We take our data protection responsibilities{" "}
@@ -22,7 +23,7 @@ const Privacy = () => (
           and how long we retain it. This policy is applying to all of our
           processing activities where we act as a data controller.
         </p>
-        <h2 className="text-xl font-bold">How we use data</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">How we use data</h2>
         <p className="mt-2">We may collect and process data that you provide to us for the purpose
           of onboarding you as an attendee of one of our events. This data may include:
         </p>
@@ -34,7 +35,9 @@ const Privacy = () => (
           for this processing is that it is necessary to fulfill a contract with
           you and your consent given in the attendee application.
         </p>
-        <h2 className="text-xl font-bold">Use of third-party applications</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Use of third-party applications
+        </h2>
         <p className="mt-2">We use the following third party applications:</p>
         <ul>
           <li>
@@ -46,7 +49,7 @@ const Privacy = () => (
           </li>
         </ul>
         <p className="mt-2"/>
-        <h2 className="text-xl font-bold">Sharing your data</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Sharing your data</h2>
         <p className="mt-2">We don&apos;t pass on your information to anyone.</p>
         <p className="mt-2">
           The following services are granted access to our user data on request:
@@ -62,17 +65,21 @@ const Privacy = () => (
           </li>
         </ul>
         <p className="mt-2"/>
-        <h2 className="text-xl font-bold">Transferring your data outside of the EU</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Transferring your data outside of the EU
+        </h2>
         <p className="mt-2">
           Goerli Dezentral gGmbH is based in Germany. Your data, will be processed
           and collected in Europe by our organizing committee in Berlin. Also will
           the information be stored in Germany-based servers.
         </p>
-        <h2 className="text-xl font-bold">Existence of automated decision-making</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Existence of automated decision-making
+        </h2>
         <p className="mt-2">
           We do not use automatic decision-making or profiling when processing data.
         </p>
-        <h2 className="text-xl font-bold">Data security</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Data security</h2>
         <p className="mt-2">
           We have put in place appropriate security measures to prevent your personal
           data from being accidentally lost, used or accessed in any unauthorized way,
@@ -84,7 +91,9 @@ const Privacy = () => (
           data breach and will notify you and any applicable regulator of a breach
           where we are legally required to do so.
         </p>
-        <h2 className="text-xl font-bold">Your rights as a subject</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Your rights as a subject
+        </h2>
         <p className="mt-2">
           You have certain rights under applicable legislation, and in particular
           under Regulation EU 2016/679 (General Data Protection Regulation or &apos;GDPR&apos;).
@@ -98,7 +107,8 @@ const Privacy = () => (
           You have a right to be informed about the processing of your personal
           data (and if you did not give it to us, information as to the source)
           and this policy intends to provide the information. Of course, if you
-          have any further questions you can contact us on the above details.
+          have any further questions you can contact us using{" "}
+          <a href="#our-details">our details</a> at the end of this policy.
         </p>
         <p className="mt-2">
           You have the right to have any inaccurate personal information
@@ -111,7 +121,8 @@ const Privacy = () => (
           do not want us to use your data in the manner set out in this policy, or
           need to advise us of any changes to your personal information, or would
           like any more information about the way in which we collect and use your
-          data, please contact us at the above details.
+          data, please contact us using{" "}
+          <a href="#our-details">our details</a> at the end of this policy.
         </p>
         <p className="mt-2">
           You have the general right to request the erasure of your personal
@@ -152,12 +163,14 @@ const Privacy = () => (
         </p>
         <p className="mt-2">
           You have the right to withdraw consent at any time by contacting
-          us on the above details.
+          us using <a href="#our-details">our details</a> at the end of this
+          policy.
         </p>
         <p className="mt-2">
           If you wish to raise a complaint on how we have handled your personal
-          data, you can contact us as set out above and we will then investigate
-          the matter.
+          data, you can contact us using{" "}
+          <a href="#our-details">our details</a> at the end of this policy and
+          we will then investigate the matter.
         </p>
         <p className="mt-2">
           If we have not responded to you within a reasonable time or if
@@ -174,12 +187,14 @@ const Privacy = () => (
           the place where you allege an infringement of one or more of our rights
           has taken place.
         </p>
-        <h2 className="text-xl font-bold">Storing data</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Storing data</h2>
         <p className="mt-2">
           We retain your information only for as long as is necessary for the
           purposes for which we process the information as set out in this policy.
         </p>
-        <h2 className="text-xl font-bold">Changes to this policy</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Changes to this policy
+        </h2>
         <p className="mt-2">
           We may make changes to this policy from time to time. We encourage you
           to review the policy whenever you access or use our website to stay informed
@@ -187,7 +202,9 @@ const Privacy = () => (
           not agree to the revised policy, you should discontinue your use of this
           website.
         </p>
-        <h2 className="text-xl font-bold">Our details</h2>
+        <h2 id="our-details" className="text-2xl font-bold mt-10 mb-3">
+          Our details
+        </h2>
         <p className="mt-2">This website is owned and operated by Goerli Dezentral gGmbH.</p>
         <p className="mt-2">
           We are registered in Germany under registration number Company Nr.
@@ -202,5 +219,7 @@ const Privacy = () => (
     </div>
   </Layout>
 );
+
+export const Head = () => <SEO title="Privacy Policy · ETHBerlin04" />;
 
 export default Privacy;
