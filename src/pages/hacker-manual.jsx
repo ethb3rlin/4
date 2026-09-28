@@ -837,11 +837,8 @@ const Hack = () => {
               after the hackathon!
             </p>
             <p>
-              The link to vote is available at{" "}
-              <a href="https://zupoll.org/ballot?id=155">
-                https://zupoll.org/ballot?id=155
-              </a>
-              . To vote, please select an option from the list of projects and
+              The link to vote is available at https://zupoll.org/ballot?id=155.
+              To vote, please select an option from the list of projects and
               click "Submit Vote". You may filter options by typing in the
               "Search Options" text bar at the top, and you can view the details
               in the submission app by clicking on the "More Details" button.

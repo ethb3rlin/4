@@ -1,0 +1,44 @@
+# SPDX-FileCopyrightText: 2026 Department of Decentralization
+# SPDX-License-Identifier: Unlicense
+#
+# This is free and unencumbered software released into the public domain.
+# For more information, please refer to <https://unlicense.org>
+
+# Weekly update pull requests for npm packages and GitHub Actions. Each one runs
+# the CI build and unit tests before it can be merged, and none publishes.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # A pull request takes the first group that matches. Packages that only
+    # work at matching versions share a group, majors included; everything
+    # else gets one pull request for its minor and patch updates, and one per
+    # major.
+    groups:
+      gatsby:
+        patterns: ["gatsby", "gatsby-*"]
+      react:
+        patterns: ["react", "react-dom"]
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # React 19 renders /gallery/ empty (react-grid-gallery 1.0.1 bundles
+      # React 18 internals), and Gatsby's router declares a React 18 peer.
+      - dependency-name: react
+        versions: [">=19"]
+      - dependency-name: react-dom
+        versions: [">=19"]
+      # Tailwind 4 changes the generated CSS; it waits for the design sweep.
+      - dependency-name: tailwindcss
+        versions: [">=4"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

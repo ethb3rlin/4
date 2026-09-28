@@ -97,17 +97,13 @@ const Sidebar = ({ className }) => {
         <div className=" text-black my-8 mx-4">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <a
-              style={{ textDecoration: "none" }}
-              href="/"
-              className="mr-8 max-w-[300px]"
-            >
+            <div className="mr-8 max-w-[300px]">
               <EthBerlinLogo
                 className=""
                 titleClassName="text-2xl"
                 subtitleClassName={`text-xs `}
               />
-            </a>
+            </div>
             <div className=" flex flex-col flex-grow-0 font-bundessans whitespace-nowrap text-black bg-white text-2xl leading-3 justify-center">
               <button
                 className="p-2"

@@ -87,9 +87,9 @@ const Impressum = () => {
               Fernández.
             </li>
           </ul>
-          <p>
+          <div className="mb-6">
             <h3 className="text-xl mt-6">Biographies</h3>
-          </p>
+          </div>
           <p>
             <strong>Benny Giang</strong> is a founding team member of
             CryptoKitties, the first NFT project to launch on Ethereum in 2017.

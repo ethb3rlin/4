@@ -165,11 +165,7 @@ const Home = () => {
 
             <p>
               You can find the projects that emerged during the hackathon
-              <a href="https://projects.ethberlin.org/submissions/results">
-                {" "}
-                here
-              </a>
-              .
+              <a href="https://projects.ethberlin.org/results/"> here</a>.
             </p>
 
             <p>
