@@ -2,7 +2,8 @@ import ReactModal from "react-modal";
 import React, { useEffect } from "react";
 
 // One floor's map with one room highlighted, in a dialog named after the room.
-// The highlight holds still (.venue-map-room in global.css).
+// The highlight blinks, and holds still under reduced motion (.venue-map-room
+// in global.css).
 const VenueMapModal = ({
   isOpen,
   handleCloseModal,

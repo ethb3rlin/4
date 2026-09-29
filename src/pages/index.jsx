@@ -9,13 +9,9 @@ import SEO from "../components/seo";
 
 const INTRO_KEYS = ["ArrowDown", "PageDown", " ", "Enter"];
 
-// Tiles of the archive index: href, visible label or MRZ key, and the name
-// read out. The first opens another site.
-const TILES = [
-  ["/gallery", "G", "ALLERY", "Gallery"],
-  ["/manifesto", "M", "ANIFESTO", "Manifesto"],
-  ["/schedule", "S", "CHEDULE", "Schedule"],
-];
+// Tiles of the archive index after the projects tile: href, MRZ key, the
+// rest of the label, and the name read out.
+const TILES = [["/gallery", "G", "ALLERY", "Gallery"]];
 
 const reducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -245,14 +241,6 @@ const Home = () => {
             </nav>
 
             <p>
-              You can find the projects that emerged during the hackathon{" "}
-              <a href="https://projects.ethberlin.org/results/">
-                on projects.ethberlin.org
-              </a>
-              .
-            </p>
-
-            <p>
               The situation is dire. We have been operating in crisis mode for
               years now. Established systems are failing, new and old
               imperialist powers are throwing continents into wars of attrition,
@@ -276,18 +264,6 @@ const Home = () => {
                 className="font-ocra text-sm text-black"
               >
                 &lt;&lt;<span className="text-berlin-red-text">M</span>&lt;
-              </a>
-              .
-            </p>
-
-            <p>
-              To see the photos from the hackathon, press{" "}
-              <a
-                href="/gallery"
-                aria-label="G, opens the gallery"
-                className="font-ocra text-sm text-black"
-              >
-                &lt;&lt;<span className="text-berlin-red-text">G</span>&lt;
               </a>
               .
             </p>

@@ -398,36 +398,40 @@ const Program = () => {
             }`}
             ref={toggleRef}
           >
-            {/* Below 360 px the label wraps above the buttons, which stay together. */}
-            <div
-              role="group"
-              aria-label="Show"
-              className="flex flex-wrap items-center gap-y-2 font-ocra text-sm"
+            {/* The Essentials and Extravaganza switch. Its checkbox stays in the
+                keyboard order, and its focus shows as a ring on the track. */}
+            <label
+              htmlFor="toogleA"
+              className="flex items-center cursor-pointer"
             >
-              <span className="mr-2.5">SHOW</span>
-              <span className="flex">
-                <button
-                  type="button"
-                  aria-pressed={!extravaganzaActive}
-                  onClick={() => setExtravaganzaActive(false)}
-                  className={`border border-black px-2 min-[360px]:px-3 py-[9px] ${
-                    extravaganzaActive ? "bg-white" : "bg-black text-white"
+              <span className="mr-3">Hacker Essentials</span>
+              <span className="relative">
+                <input
+                  id="toogleA"
+                  type="checkbox"
+                  role="switch"
+                  aria-label="Hacker Extravaganza"
+                  className="sr-only peer"
+                  checked={extravaganzaActive}
+                  onChange={() => setExtravaganzaActive((prev) => !prev)}
+                />
+                <span
+                  className={`block w-10 h-4 ${
+                    extravaganzaActive ? "bg-red-500" : "bg-gray-400"
+                  } rounded-full shadow-inner peer-focus-visible:ring-2 peer-focus-visible:ring-black peer-focus-visible:ring-offset-2`}
+                />
+                <span
+                  className={`absolute w-6 h-6 rounded-full shadow -left-1 -top-1 transition ${
+                    extravaganzaActive
+                      ? "translate-x-full bg-red-300"
+                      : "bg-gray-200"
                   }`}
-                >
-                  ESSENTIALS
-                </button>
-                <button
-                  type="button"
-                  aria-pressed={extravaganzaActive}
-                  onClick={() => setExtravaganzaActive(true)}
-                  className={`border border-black border-l-0 px-2 min-[360px]:px-3 py-[9px] ${
-                    extravaganzaActive ? "bg-black text-white" : "bg-white"
-                  }`}
-                >
-                  EVERYTHING
-                </button>
+                />
               </span>
-            </div>
+              <span className="ml-3 text-berlin-red-text">
+                Hacker Extravaganza
+              </span>
+            </label>
             <nav aria-label="Days" className="flex gap-1 font-ocra text-sm">
               <a href="#fri" className="px-2 py-2.5 text-black">
                 FRI 24

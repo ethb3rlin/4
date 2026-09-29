@@ -299,7 +299,9 @@ const FaceRecognition = () => {
                     aria-pressed={selectedColor === color}
                     title={name}
                     onClick={() => setSelectedColor(color)}
-                    className="w-8 h-8 rounded-full"
+                    className={`w-8 h-8 rounded-full transition-opacity duration-200 hover:scale-110 ${
+                      selectedColor === color ? "opacity-100" : "opacity-20"
+                    }`}
                     style={{
                       backgroundColor: color,
                       boxShadow:

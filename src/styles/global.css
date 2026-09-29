@@ -141,10 +141,13 @@
     margin-left: -2rem;
   }
 }
-/* The room on the map dialog holds still: div beats the room's own class. */
-div.venue-map-room {
-  animation: none;
-  opacity: 0.7;
+/* The room on the map dialog blinks, unless the reader asks for less motion:
+   then it holds still (div beats the room's own class). */
+@media (prefers-reduced-motion: reduce) {
+  div.venue-map-room {
+    animation: none;
+    opacity: 0.7;
+  }
 }
 body {
   margin: 0;

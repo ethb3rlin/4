@@ -18,7 +18,6 @@ const Layout = ({ children, showEthDiamond, className, hidden }) => {
         <div
           className={`z-10 hidden md:flex justify-end items-center gap-6 my-9 sm:mr-12 font-ocra text-black`}
         >
-          <span className="bg-black text-white px-2 py-0.5">ARCHIVE</span>
           <span>May 24-26, 2024</span>
           <a
             className="underline"

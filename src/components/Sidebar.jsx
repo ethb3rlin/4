@@ -119,11 +119,13 @@ const Sidebar = ({ className }) => {
             type="button"
             onClick={toggleKeys}
             aria-pressed={keysOn}
-            className="mt-4 text-xs border border-black px-2.5 py-[7px]"
+            className="mt-4 text-xs text-gray-600 border border-gray-400 px-2.5 py-[7px] hover:text-black hover:border-black"
           >
             SHORTCUTS: {keysOn ? "ON" : "OFF"}
           </button>
-          <p className="text-xs mt-2 mb-0">Press a red letter to jump.</p>
+          <p className="text-xs text-gray-600 mt-2 mb-0">
+            Press a red letter to jump.
+          </p>
         </div>
       </header>
 
