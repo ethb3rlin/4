@@ -34,6 +34,10 @@ updates:
       # Tailwind 4 changes the generated CSS; it waits for the design sweep.
       - dependency-name: tailwindcss
         versions: [">=4"]
+      # Gatsby's own sharp is ^0.32.6; a newer one for the face pool would
+      # load a second libvips into the build.
+      - dependency-name: sharp
+        versions: [">=0.33"]
 
   - package-ecosystem: github-actions
     directory: /
