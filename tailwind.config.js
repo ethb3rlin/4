@@ -20,6 +20,10 @@ module.exports = {
         secondary: "#E65B54",
         butter: "#F3E4BD",
         "berlin-red": "#E65B54",
+        // For links and red text below 24px: about 5.8:1 on the text box,
+        // where berlin-red measures 3.45:1. Large headings, stamps and
+        // decoration keep berlin-red.
+        "berlin-red-text": "#B8342D",
       },
     },
   },

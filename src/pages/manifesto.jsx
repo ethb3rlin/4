@@ -1,12 +1,13 @@
 import React from "react";
+import SEO from "../components/seo";
 import Layout from "../components/Layout";
 import ETHBerlin from "../components/ETHBerlin";
 
 const Manifesto = () => {
   return (
     <Layout>
-      <div className="textbox text-base decorate-links">
-        <h1 className="mb-4 font-ocra underline text-berlin-red">
+      <div className="textbox text-base max-w-[760px]">
+        <h1 className="mb-4 font-ocra text-berlin-red">
           &lt;&lt;M&lt;ANIFESTO
         </h1>
         <div>
@@ -51,15 +52,15 @@ const Manifesto = () => {
             are the red lines? All seems a blur, and everything goes in the
             always-online, never-stopping economic game machine.
           </p>
-          <quote>
+          <blockquote>
             <p>
               &quot;The folly was in thinking that, in a system that allows for
-              almost anything, people would *not* maximize for their own utility
-              over believing in the mission. To be fair though (and I mean this
-              very seriously) a lot of us aren't exactly clear on *what* the
-              mission is. It seems like it's mainly a lot of people trading
-              shitcoins and jpegs, but we're told this isn't what we're trying
-              to do.&quot;
+              almost anything, people would <em>not</em> maximize for their own
+              utility over believing in the mission. To be fair though (and I
+              mean this very seriously) a lot of us aren't exactly clear on{" "}
+              <em>what</em> the mission is. It seems like it's mainly a lot of
+              people trading shitcoins and jpegs, but we're told this isn't what
+              we're trying to do.&quot;
             </p>
             <p>
               {" "}
@@ -73,7 +74,7 @@ const Manifesto = () => {
               </a>
               .
             </p>
-          </quote>
+          </blockquote>
 
           <p>
             The lack of shared vision or values also results in an identity
@@ -113,13 +114,15 @@ const Manifesto = () => {
             >
               in his blog
             </a>
+            :{" "}
             <em>
               &quot;The concept of proof-of-personhood in principle seems very
               valuable [...]. A world with no proof-of-personhood seems more
               likely to be a world dominated by centralized identity solutions,
-              money, small closed communities, or some combination of all three.
-            </em>
-            &quot; — But do we give up so easily?{" "}
+              money, small closed communities, or some combination of all
+              three.&quot;
+            </em>{" "}
+            — But do we give up so easily?{" "}
           </p>
           <p>
             It seems the community is breaking off into different silos: How
@@ -144,7 +147,7 @@ const Manifesto = () => {
             homomorphic encryption, secure multi-party computation — the list
             goes on. Let&#39;s put it to use!{" "}
           </p>
-          <quote>
+          <blockquote>
             <p>
               "The magic of cryptography gives us privacy, while the resilience
               of blockchains allows for global, coordinated, coercion-resistant
@@ -162,7 +165,7 @@ const Manifesto = () => {
               </a>
               .
             </p>
-          </quote>
+          </blockquote>
           <p>
             <strong>
               For this year&#39;s ETHBerlin hackathon, we invite you to join the
@@ -231,5 +234,7 @@ const Manifesto = () => {
     </Layout>
   );
 };
+
+export const Head = () => <SEO title="Manifesto · ETHBerlin04" />;
 
 export default Manifesto;

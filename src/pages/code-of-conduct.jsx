@@ -1,13 +1,19 @@
 import Layout from "../components/Layout";
 import React from "react";
+import SEO from "../components/seo";
 
 const CoC = () => (
   <Layout>
-    <div className="textbox">
-      <h1 className="my-4 underline text-secondary font-ocra">
+    <div className="textbox max-w-[760px]">
+      <h1 className="my-4 text-secondary font-ocra">
         CODE &lt;&lt;O&lt;F CONDUCT
       </h1>
-      <div className="text-justify decorate-links">
+      <p className="border border-black px-4 py-3 font-ocra text-sm leading-5">
+        TO REPORT UNACCEPTABLE BEHAVIOR:{" "}
+        <a href="mailto:escalate@ethberlin.org">escalate@ethberlin.org</a>, or
+        tell any organizer in person.
+      </p>
+      <div>
         <p className="mt-2">
           We are a collective and we want to bring people in the community
           together to exchange ideas, make new friends, and build things as an
@@ -26,7 +32,7 @@ const CoC = () => (
           religion (or lack thereof), or position. We are a diverse community.
           Leave your egos at the door.
         </p>
-        <h2 className="text-xl font-bold">Be Open</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Be Open</h2>
         <p className="mt-2">
           We welcome one and all. We especially love to adopt newbies in the
           community. We foster decentralized, open communities, society, and
@@ -35,7 +41,7 @@ const CoC = () => (
           when we show up with an open mind and curiosities to explore. If you
           don't have an open mind, this group is not for you.
         </p>
-        <h2 className="text-xl font-bold">Be Respectful</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Be Respectful</h2>
         <p className="mt-2">
           Be exceptionally kind to others. Respect their work, time, and
           perspectives. Do not insult or troll others, unless it is for banter
@@ -43,22 +49,26 @@ const CoC = () => (
           energy to be part of this group. Respect each other, the projects, and
           the process.
         </p>
-        <h2 className="text-xl font-bold">Be Daring</h2>{" "}
+        <h2 className="text-2xl font-bold mt-10 mb-3">Be Daring</h2>{" "}
         <p className="mt-2">
           Dare to create something nobody did before. If you get stuck, ask for
           help - people will help you when you ask. This is a community. We
           create things together.
         </p>
-        <h2 className="text-xl font-bold">What We Create</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">What We Create</h2>
         <p className="mt-2">
           Promote Decentralization. Build what matters to you. You can organize
           events, build applications, or foster public discourse. You can create
           art and beauty on a computer. Most importantly, create, hack, and
           build together.
         </p>
-        <h2 className="text-xl font-bold">Contributions in Other Ways</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Contributions in Other Ways
+        </h2>
         <p className="mt-2">Banter and memeing is encouraged as you see fit.</p>
-        <h2 className="text-xl font-bold">Personal Responsibility</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">
+          Personal Responsibility
+        </h2>
         <p className="mt-2">
           Everyone in this community is responsible for their own tasks. If you
           have a project, it is your responsibility to manage it. We are not
@@ -66,7 +76,7 @@ const CoC = () => (
           for that. But we are a community and here to support. Always reach out
           if you are having issues with completing a task.
         </p>
-        <h2 className="text-xl font-bold">
+        <h2 className="text-2xl font-bold mt-10 mb-3">
           Unacceptable Behavior & Harassment
         </h2>{" "}
         <p className="mt-2">
@@ -86,7 +96,7 @@ const CoC = () => (
           other events; inappropriate physical contact, and unwelcomed sexual
           attention.
         </p>
-        <h2 className="text-xl font-bold">Notify Us</h2>
+        <h2 className="text-2xl font-bold mt-10 mb-3">Notify Us</h2>
         <p className="mt-2">
           If you are subject to or witness unacceptable behavior, or have any
           other concerns, you can always notify a project lead, event organizer,
@@ -99,5 +109,7 @@ const CoC = () => (
     </div>
   </Layout>
 );
+
+export const Head = () => <SEO title="Code of Conduct · ETHBerlin04" />;
 
 export default CoC;

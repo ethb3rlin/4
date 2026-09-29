@@ -5,7 +5,6 @@
   width: 100%; /* Full-width */
   height: 5px; /* Specified height */
   background: #ddd; /* Grey background */
-  outline: none; /* Remove outline */
   opacity: 0.7; /* Set transparency (change it as needed) */
   -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
   transition: opacity 0.2s;
@@ -39,4 +38,10 @@
 /* Custom styles for when the slider is focused (optional) */
 .slider:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 3px #e65b54; /* Custom focus ring */
+}
+
+/* Keyboard focus shows, clear of the thumb (design review, issue 50). */
+.slider:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 6px;
 }

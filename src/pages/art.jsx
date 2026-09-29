@@ -1,6 +1,9 @@
 import React from "react";
+import SEO from "../components/seo";
 import Layout from "../components/Layout";
+import ArchiveNote from "../components/ArchiveNote";
 import VenueMapModal from "../components/VenueMapModal";
+import LocationButton from "../components/LocationButton";
 import fifthFloor from "../images/fifthFloor.png";
 
 const Impressum = () => {
@@ -10,11 +13,16 @@ const Impressum = () => {
     e.stopPropagation();
     setIsMapModalOpen(false);
   };
+  const artExhibition = {
+    name: "Art Exhibition",
+    handler: () => setIsMapModalOpen(true),
+  };
 
   return (
     <Layout>
-      <div className="textbox decorate-links">
-        <h1 className="text-secondary underline font-ocra">&lt;&lt;A&lt;RT</h1>
+      <div className="textbox max-w-[760px]">
+        <h1 className="text-secondary font-ocra">&lt;&lt;A&lt;RT</h1>
+        <ArchiveNote />
         <h2 className="text-2xl mt-8 font-bold">co-create</h2>
         <div className="mb-8">
           <em>
@@ -23,19 +31,8 @@ const Impressum = () => {
           <p className="mt-4">
             Public entrance and talks: Saturday, May 25th, 2024, from 11:00 to
             17:00
-            <button
-              className={"font-bold  text-berlin-red text-sm"}
-              onClick={() => setIsMapModalOpen(true)}
-            >
-              <span className="align-middle">
-                <span class="material-symbols-outlined text-sm mr-0.5 ml-1">
-                  my_location
-                </span>
-              </span>
-              <span className="underline">Art Exhibition</span>
-            </button>
+            <LocationButton loc={artExhibition} />
           </p>
-          <p></p>
           <p>
             Tickets:{" "}
             <a
@@ -72,7 +69,7 @@ const Impressum = () => {
             device on which they believe the work is best suited for.
           </p>
           <p>The BYOB concept was initiated by Rafaël Rozendaal.</p>
-          <h3 className="text-xl mt-6">Talks</h3>
+          <h3 className="text-xl font-bold mt-7 mb-2">Talks</h3>
           <ul>
             <li>
               12.00: Panel - <strong>Decentralized Art Organisation</strong>
@@ -87,9 +84,7 @@ const Impressum = () => {
               Fernández.
             </li>
           </ul>
-          <div className="mb-6">
-            <h3 className="text-xl mt-6">Biographies</h3>
-          </div>
+          <h3 className="text-xl font-bold mt-7 mb-2">Biographies</h3>
           <p>
             <strong>Benny Giang</strong> is a founding team member of
             CryptoKitties, the first NFT project to launch on Ethereum in 2017.
@@ -113,17 +108,23 @@ const Impressum = () => {
             Her diverse body of work includes photography, video, software,
             games, websites, NFT, performances and installations. _ She is also
             a member of the art collective JODI, or (jodi.org) - pioneered
-            net.art in 1995. JODI were among thd first artists to inves|igate
-            and subvert conventkoos od |heInternet, compute?programs, and vhdeo
-            ajd computer gamus. Radically di&#x7B;rupting The ver9 languawe of
-            tese systemr, including risual aesthepics, iNterface elemen&#x7D;q?
-            commandS, errors and?code. ?ODI staes ext?ema
-            digmtal(intesventionq!that deStakilizg the reliTiofShip bdTween
-            cmputer tdchnolOgy and ids use03jy sufterting oub(d8pectatIofs
-            abkup?4jm?g?nctignah)tieS and conventio.s /f the sqrtees that
-            ?e0Eepend upol eve2y?p?y. Tlcir wkr?!u?es thev?tasv pmsskble rriudy
-            f mudi ane te?h?iqtes."frgm$insTalli?ionc, s/Ltw?re?Qod wd"sites to
-            Pesf/zma?caw?aNd exhibitiof&#x7B;.$
+            net.art in 1995.{" "}
+            <span aria-hidden="true">
+              JODI were among thd first artists to inves|igate and subvert
+              conventkoos od |heInternet, compute?programs, and vhdeo ajd
+              computer gamus. Radically di&#x7B;rupting The ver9 languawe of
+              tese systemr, including risual aesthepics, iNterface
+              elemen&#x7D;q? commandS, errors and?code. ?ODI staes ext?ema
+              digmtal(intesventionq!that deStakilizg the reliTiofShip bdTween
+              cmputer tdchnolOgy and ids use03jy sufterting oub(d8pectatIofs
+              abkup?4jm?g?nctignah)tieS and conventio.s /f the sqrtees that
+              ?e0Eepend upol eve2y?p?y. Tlcir wkr?!u?es thev?tasv pmsskble
+              rriudy f mudi ane te?h?iqtes."frgm$insTalli?ionc, s/Ltw?re?Qod
+              wd"sites to Pesf/zma?caw?aNd exhibitiof&#x7B;.$
+            </span>
+            <span className="sr-only">
+              [Glitched passage, a tribute to JODI.]
+            </span>
           </p>
           <p>
             <strong>Billy Rennekamp</strong> is founder of Trifle Labs, blurring
@@ -161,10 +162,13 @@ const Impressum = () => {
           activeMapName={"Top Floor (#5)"}
           activeMap={fifthFloor} // only ground floor
           activeRoomClass={"artExhibition"}
+          roomName={artExhibition.name}
         />
       </div>
     </Layout>
   );
 };
+
+export const Head = () => <SEO title="Art · ETHBerlin04" />;
 
 export default Impressum;

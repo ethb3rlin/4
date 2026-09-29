@@ -36,6 +36,7 @@ export default function SEO({ title, description, image, article }) {
 
   return (
     <>
+      <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
       <meta name="image" content={seo.image} />
 

@@ -1,12 +1,21 @@
 import Layout from "../components/Layout";
 import React, { useState, useRef, useEffect } from "react";
+import SEO from "../components/seo";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import "../styles/sliders.css";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { CiFaceMeh } from "react-icons/ci";
-import { FiRefreshCcw } from "react-icons/fi";
-import { FaDownload, FaUpload } from "react-icons/fa";
+import { FaUpload } from "react-icons/fa";
+
+// The line colors, each with the name a swatch reads out (issue 50).
+const COLORS = [
+  ["#FFD200", "Yellow"],
+  ["#E65B54", "Red"],
+  ["#394DFF", "Blue"],
+  ["#23CD76", "Green"],
+];
+
+// A step's label, in OCR-A like every label and button here (issue 51).
+const STEP = "font-ocra text-[15px] leading-5 mb-2.5";
 
 const FaceRecognition = () => {
   const imgRef = useRef(null);
@@ -177,207 +186,184 @@ const FaceRecognition = () => {
     }
   };
 
+  // Choose a face, adjust, generate: the steps in their order (issue 49).
   return (
     <Layout>
-      <div className="decorate-links textbox font-ocra">
-        <h1 className="my-4 underline font-ocra text-berlin-red">
+      <div className="textbox">
+        <h1 className="mb-2 font-ocra text-berlin-red">
           &lt;&lt;F&lt;ACE IDON'T
         </h1>
-        <div>Generate your ETHBerlin04 profile picture</div>
-        {/* Display error message if present */}
+        <p>Generate your ETHBerlin04 profile picture.</p>
         {errorMessage && (
-          <div className="text-rose-700 text-xl font-bold" role="alert">
-            {errorMessage}
-          </div>
-        )}
-        <div className="md:grid grid-cols-2 gap-12">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center"
+          <p
+            role="alert"
+            className="text-rose-800 font-bold border border-rose-800 px-3 py-2"
           >
-            <div className="flex flex-col justify-center items-center my-4 w-full">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="flex flex-col items-center text-berlin-red brightness-90 hover:brightness-110 font-bold py-2 px-4 rounded cursor-pointer"
-              >
-                <FiRefreshCcw />
-                Reset
-              </button>
-              <div className="flex flex-row flex-wrap items-center justify-center mb-3">
-                <div className="flex flex-col justify-center items-center">
-                  <button
-                    type="button"
-                    className="flex flex-col items-center text-berlin-red brightness-90 hover:brightness-110 font-bold pt-2 px-4 rounded cursor-pointer"
-                    onClick={handleRandomFace}
+            {errorMessage}
+          </p>
+        )}
+        <div className="grid gap-10 items-start lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-7">
+            <section>
+              <h2 className={STEP}>1 · CHOOSE A FACE</h2>
+              {/* Hidden from view, not from the keyboard: its focus shows on the drop area. */}
+              <input
+                type="file"
+                id="fileInput"
+                className="sr-only peer"
+                name="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              {!imageSrc ? (
+                <label
+                  htmlFor="fileInput"
+                  className="flex flex-col items-center justify-center gap-2 w-full aspect-square max-h-[360px] border-2 border-dashed border-berlin-red-text bg-gray-200/30 hover:bg-gray-200/70 text-berlin-red-text cursor-pointer font-ocra text-sm peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-black peer-focus-visible:outline-offset-2"
+                >
+                  <FaUpload aria-hidden="true" className="text-3xl" />
+                  UPLOAD A PHOTO
+                </label>
+              ) : (
+                <div className="overflow-hidden relative">
+                  <ReactCrop
+                    crop={crop}
+                    onChange={(newCrop) => setCrop(newCrop)}
                   >
-                    {isFaceLoading ? (
-                      <AiOutlineLoading3Quarters className="animate-spin h-5 w-5" />
-                    ) : (
-                      <>
-                        <CiFaceMeh />
-                        <span>Random Face</span>
-                      </>
-                    )}
-                  </button>
+                    <img
+                      src={imageSrc}
+                      ref={imgRef}
+                      onLoad={onImgLoad}
+                      alt="Your chosen face"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </ReactCrop>
+                </div>
+              )}
+              <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                <button
+                  type="button"
+                  onClick={handleRandomFace}
+                  className="border border-black px-3 py-2 font-ocra text-sm"
+                >
+                  {isFaceLoading ? "LOADING…" : "RANDOM FACE"}
+                </button>
+                <span className="text-xs text-gray-600">
+                  Random faces from{" "}
                   <a
                     href="https://thispersondoesnotexist.com/"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[0.5rem] text-gray-400"
                   >
                     thispersondoesnotexist.com
                   </a>
-                </div>
-                <label
-                  htmlFor="fileInput"
-                  className=" flex flex-col items-center text-berlin-red brightness-90 hover:brightness-110 font-bold pt-2 px-4 rounded cursor-pointer mb-3"
-                >
-                  <FaUpload className="text-base" />
-                  Upload Face
-                </label>
-              </div>
-
-              <div className="w-20">
-                <button
-                  className="bg-berlin-red font-bold py-2 px-4 rounded hover:brightness-105 flex items-center justify-center disabled:opacity-50 w-full"
-                  type="submit"
-                  disabled={isLoading || !image} // Disable the button while loading
-                >
-                  {isLoading ? (
-                    <AiOutlineLoading3Quarters className="animate-spin h-5 w-5" />
-                  ) : (
-                    "Submit"
-                  )}
-                </button>
-              </div>
-            </div>
-            <div className="w-full">
-              {/* Sliders for lineThickness and pointSize */}
-              <div className="my-4">
-                <label>
-                  Line Thickness: {lineThickness}
-                  <input
-                    type="range"
-                    min="1"
-                    max="20"
-                    value={lineThickness}
-                    onChange={(e) =>
-                      setLineThickness(parseInt(e.target.value, 10))
-                    }
-                    className="slider"
-                  />
-                </label>
-              </div>
-              <div className="my-4">
-                <label>
-                  Point Size: {pointSize}
-                  <input
-                    type="range"
-                    min="1"
-                    max="20"
-                    value={pointSize}
-                    onChange={(e) => setPointSize(parseInt(e.target.value, 10))}
-                    className="slider"
-                  />
-                </label>
-              </div>
-              {/* color selection  */}
-              <div className="flex flex-row items-center">
-                <span>Line Color:</span>
-                <div className="inline">
-                  {["#FFD200", "#E65B54", "#394DFF", "#23CD76"].map((color) => (
-                    <button
-                      key={color}
-                      onClick={(e) => {
-                        e.preventDefault(); // Don't submit the form
-                        setSelectedColor(color);
-                      }}
-                      className={`inline-block w-8 h-8 rounded-full cursor-pointer mx-2 my-1 transition-opacity duration-200 hover:scale-110 ${
-                        selectedColor === color ? "opacity-100" : "opacity-20"
-                      }`}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Hidden file input */}
-            <input
-              type="file"
-              id="fileInput"
-              className="hidden"
-              name="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-            {/* Styled label as a button */}
-            {/* Show crop tool if image is selected */}
-            {!imageSrc ? (
-              <label
-                htmlFor="fileInput"
-                className="flex items-center justify-center text-center w-full h-full border-dashed border-2 rounded-md border-berlin-red bg-gray-200 bg-opacity-30 hover:bg-opacity-70 cursor-pointer"
-                style={{
-                  paddingTop: "100%", // This will make the height equal to 100% of the width
-                  position: "relative", // Position relative to enable absolute positioning of the content inside
-                }}
-              >
-                <span
-                  className="flex flex-col items-center justify-center text-center w-full h-full text-berlin-red"
-                  style={{
-                    position: "absolute", // Absolutely position the content to be centered
-                    top: 0,
-                    left: 0,
-                  }}
-                >
-                  <FaUpload className="text-3xl mb-2" />
-                  Upload face
                 </span>
-              </label>
-            ) : (
-              <div className="overflow-hidden relative">
-                <ReactCrop crop={crop} onChange={(newCrop) => setCrop(newCrop)}>
-                  <img
-                    src={imageSrc}
-                    ref={imgRef}
-                    onLoad={onImgLoad}
-                    alt="Source Image"
-                    style={{ maxWidth: "100%" }}
-                  />
-                </ReactCrop>
               </div>
-            )}
-          </form>
-
-          <div className="my-12">
-            <div className="h-full">
-              <h2 className="text-center">Result</h2>
-              <div className="flex flex-col items-center justify-center h-full">
-                {resultImage ? (
-                  <>
-                    <img
-                      src={resultImage}
-                      alt="Processed result"
-                      className="my-4"
-                    />
-                    <a href={resultImage} download="resultImage.jpeg">
-                      <button className="my-4 text-berlin-red font-semibold inline-flex items-center">
-                        <FaDownload className="mr-2" />
-                        Download
-                      </button>
-                    </a>
-                  </>
-                ) : (
-                  <div> The result will appear here </div>
+            </section>
+            <section>
+              <h2 className={STEP}>2 · ADJUST</h2>
+              <label className="block mb-4">
+                Line thickness: {lineThickness}
+                <input
+                  type="range"
+                  min="1"
+                  max="20"
+                  value={lineThickness}
+                  onChange={(e) =>
+                    setLineThickness(parseInt(e.target.value, 10))
+                  }
+                  className="slider block mt-3.5"
+                />
+              </label>
+              <label className="block mb-4">
+                Point size: {pointSize}
+                <input
+                  type="range"
+                  min="1"
+                  max="20"
+                  value={pointSize}
+                  onChange={(e) => setPointSize(parseInt(e.target.value, 10))}
+                  className="slider block mt-3.5"
+                />
+              </label>
+              <div
+                role="group"
+                aria-label="Line color"
+                className="flex items-center flex-wrap gap-2.5"
+              >
+                <span>Line color:</span>
+                {COLORS.map(([color, name]) => (
+                  <button
+                    key={color}
+                    type="button"
+                    aria-label={name}
+                    aria-pressed={selectedColor === color}
+                    title={name}
+                    onClick={() => setSelectedColor(color)}
+                    className={`w-8 h-8 rounded-full transition-opacity duration-200 hover:scale-110 ${
+                      selectedColor === color ? "opacity-100" : "opacity-20"
+                    }`}
+                    style={{
+                      backgroundColor: color,
+                      boxShadow:
+                        selectedColor === color
+                          ? "0 0 0 3px #fff, 0 0 0 5px #000"
+                          : "none",
+                    }}
+                  />
+                ))}
+              </div>
+            </section>
+            <section>
+              <h2 className={STEP}>3 · GENERATE</h2>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={isLoading || !image}
+                  className="bg-berlin-red text-black font-ocra text-[15px] leading-5 px-[18px] py-3 disabled:opacity-50"
+                >
+                  {isLoading ? "GENERATING…" : "GENERATE"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="underline px-1 py-2.5"
+                >
+                  Reset
+                </button>
+                {!imageSrc && (
+                  <span className="text-sm text-gray-600">
+                    Choose a face first.
+                  </span>
                 )}
               </div>
-            </div>
+            </section>
+          </form>
+
+          <div>
+            <h2 className={STEP}>RESULT</h2>
+            {resultImage ? (
+              <>
+                <img src={resultImage} alt="Your generated profile picture" />
+                <a
+                  href={resultImage}
+                  download="resultImage.jpeg"
+                  className="inline-block mt-3"
+                >
+                  Download
+                </a>
+              </>
+            ) : (
+              <div className="aspect-square max-h-[360px] border border-black/20 flex items-center justify-center text-gray-600 text-sm">
+                The result will appear here
+              </div>
+            )}
           </div>
         </div>
       </div>
     </Layout>
   );
 };
+
+export const Head = () => <SEO title="Face IDon't · ETHBerlin04" />;
 
 export default FaceRecognition;
