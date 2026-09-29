@@ -16,7 +16,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "test": "node --test --experimental-test-coverage src/data/editions.test.mjs"
+    "test": "node --test --experimental-test-coverage src/data/editions.test.mjs src/build/faces.test.mjs"
   },
   "dependencies": {
     "gatsby": "^5.16.1",
@@ -30,6 +30,7 @@
     "react-image-crop": "^11.0.5",
     "react-modal": "^3.15.1",
     "react-responsive": "^9.0.0-beta.10",
+    "sharp": "^0.32.6",
     "typewriter-effect": "^2.21.0",
     "yet-another-react-lightbox": "^2.6.2"
   },

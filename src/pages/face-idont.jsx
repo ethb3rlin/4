@@ -168,11 +168,16 @@ const FaceRecognition = () => {
     }
   };
 
+  // One of the faces the build stored in /faces/ (src/build/faces.mjs), at
+  // random; index.json holds their count.
   const handleRandomFace = async () => {
     setIsFaceLoading(true); // Start loading indicator
     try {
+      const index = await fetch("/faces/index.json");
+      const { count } = index.ok ? await index.json() : { count: 0 };
+      if (!count) throw new Error("Failed to fetch a random face");
       const response = await fetch(
-        "https://europe-west4-ethberlin-dystopian-faces.cloudfunctions.net/random-faces"
+        `/faces/${Math.floor(Math.random() * count)}.jpg`
       );
       if (!response.ok) throw new Error("Failed to fetch a random face");
       const blob = await response.blob();
