@@ -22,11 +22,13 @@ import * as gatsbyNode from "../../gatsby-node.mjs";
 import {
   COUNT,
   collectFaces,
+  DEADLINE_MS,
   DIR,
   defaultEnv,
   fetchFace,
   isJpeg,
   MAX_BYTES,
+  MAX_EDGE,
   MAX_FAILURES,
   MAX_REQUESTS,
   onPostBuild,
@@ -35,6 +37,7 @@ import {
   resize,
   SIZE,
   SOURCE,
+  storeFaces,
   TIMEOUT_MS,
   writeFaces,
 } from "./faces.mjs";
@@ -53,6 +56,7 @@ const AS_HTML = { headers: { "content-type": "text/html" } };
  * @typedef {object} Env
  * @property {function(string, RequestInit): Promise<Response>} fetch fetches
  * @property {function(number): Promise<unknown>} sleep waits that many ms
+ * @property {function(): number} now the clock, in ms
  * @property {function(Uint8Array): Promise<Uint8Array>} resize resizes
  * @property {function(string, {recursive: boolean}): Promise<unknown>} mkdir
  *   creates the folder
@@ -247,11 +251,13 @@ const picture = (width, height) =>
  * An environment of fakes: no network, no clock, no image library, and a
  * record of what would have been written.
  * @param {FakeFetch} f the fetch to use
+ * @param {function(): number} [now] the clock; one that stands at 0 unless
+ *   a test passes another
  * @returns {{env: Env, sleeps: Array<number>,
  *   files: Map<string, (string|Uint8Array)>, dirs: Array<string>}} the
  *   environment and its records
  */
-const fakeEnv = (f) => {
+const fakeEnv = (f, now = () => 0) => {
   /** @type {Array<number>} */
   const sleeps = [];
   /** @type {Map<string, (string|Uint8Array)>} */
@@ -272,6 +278,7 @@ const fakeEnv = (f) => {
       sleep: async (ms) => {
         sleeps.push(ms);
       },
+      now,
       /**
        * Passes the image through unchanged.
        * @param {Uint8Array} bytes the image
@@ -333,8 +340,18 @@ const fakeReporter = () => {
 test("the limits are the ones the spec names", () => {
   assert.equal(SOURCE, "https://thispersondoesnotexist.com/random-person.jpeg");
   assert.deepEqual(
-    [COUNT, SIZE, PAUSE_MS, TIMEOUT_MS, MAX_BYTES, MAX_REQUESTS, MAX_FAILURES],
-    [100, 512, 250, 10000, 5242880, 500, 5],
+    [
+      COUNT,
+      SIZE,
+      PAUSE_MS,
+      TIMEOUT_MS,
+      MAX_BYTES,
+      MAX_REQUESTS,
+      MAX_FAILURES,
+      DEADLINE_MS,
+      MAX_EDGE,
+    ],
+    [100, 512, 250, 10000, 5242880, 500, 5, 180000, 2048],
   );
   assert.equal(DIR, "public/faces");
 });
@@ -463,7 +480,16 @@ test("resize refuses an oblong image, a small one and no image", async () => {
   await assert.rejects(resize(await picture(300, 300)), {
     message: "source sent a 300x300 image",
   });
-  await assert.rejects(resize(JPEG));
+  await assert.rejects(resize(await picture(MAX_EDGE + 1, MAX_EDGE + 1)), {
+    message: "source sent a 2049x2049 image",
+  });
+  await assert.rejects(resize(JPEG), { message: /^Input buffer/ });
+});
+
+test("resize takes the plain bytes the source's body reads into", async () => {
+  const bytes = new Uint8Array(await picture(1024, 1024));
+  const meta = await sharp(await resize(bytes)).metadata();
+  assert.deepEqual([meta.width, meta.height], [SIZE, SIZE]);
 });
 
 test("collectFaces keeps each face once and pauses between requests", async () => {
@@ -532,6 +558,48 @@ test("collectFaces stops at the request limit and counts a failed resize", async
   );
 });
 
+test("collectFaces stops at the deadline, and no request runs past it", async (t) => {
+  const timeout = t.mock.method(AbortSignal, "timeout");
+  // One clock for all: a pause moves it by the pause, a request by 4 s.
+  let clock = 0;
+  const f = fakeFetch((i) => face(i), AS_JPEG);
+  const { env } = fakeEnv(f, () => clock);
+  /**
+   * Moves the clock by the pause.
+   * @param {number} ms the pause
+   * @returns {Promise<void>} at once
+   */
+  env.sleep = async (ms) => {
+    clock += ms;
+  };
+  /**
+   * Moves the clock by 4 s, then answers as the fake does.
+   * @param {string} url the address asked for
+   * @param {RequestInit} opts the options passed
+   * @returns {Promise<Response>} the answer
+   */
+  env.fetch = async (url, opts) => {
+    clock += 4000;
+    return f.fetch(url, opts);
+  };
+  const got = await collectFaces(env, {
+    count: 9,
+    maxRequests: 9,
+    maxFailures: 9,
+    pauseMs: 3000,
+    deadlineMs: 25000,
+  });
+  // Requests start at 0, 7, 14 and 21 s; the one at 21 s gets the 4 s left,
+  // not 10, and after the pause to 28 s none starts.
+  assert.deepEqual(got.faces, [face(0), face(1), face(2), face(3)]);
+  assert.equal(got.requests, 4);
+  assert.equal(got.error, "stopped after 25000 ms");
+  assert.deepEqual(
+    timeout.mock.calls.map((c) => c.arguments[0]),
+    [TIMEOUT_MS, TIMEOUT_MS, TIMEOUT_MS, 4000],
+  );
+});
+
 test("writeFaces writes the faces and their count", async () => {
   const dir = await mkdtemp(join(tmpdir(), "faces-"));
   try {
@@ -565,15 +633,16 @@ test("defaultEnv uses the platform's fetch, clock, image library and files", asy
   assert.deepEqual(await fetchFace(env.fetch), JPEG);
   assert.equal(net.mock.calls[0].arguments[0], SOURCE);
   assert.equal(await env.sleep(1), undefined);
+  assert.ok(Math.abs(env.now() - Date.now()) < 1000);
   assert.equal(env.resize, resize);
   assert.equal(env.dir, DIR);
 });
 
-test("onPostBuild stores 100 faces and says so", async () => {
+test("storeFaces stores 100 faces and says so", async () => {
   const f = fakeFetch((i) => face(i), AS_JPEG);
   const { env, files, dirs } = fakeEnv(f);
   const { reporter, lines } = fakeReporter();
-  await onPostBuild({ reporter }, {}, env);
+  await storeFaces({ reporter }, env);
   assert.deepEqual(dirs, ["out/faces"]);
   assert.equal(files.size, COUNT + 1);
   assert.deepEqual(files.get("out/faces/99.jpg"), face(99));
@@ -583,7 +652,7 @@ test("onPostBuild stores 100 faces and says so", async () => {
   ]);
 });
 
-test("onPostBuild warns when the source fails, and stores none", async () => {
+test("storeFaces warns when the source fails, and stores none", async () => {
   const { env, files } = fakeEnv({
     /**
      * A fetch whose network is down.
@@ -595,20 +664,45 @@ test("onPostBuild warns when the source fails, and stores none", async () => {
     calls: [],
   });
   const { reporter, lines } = fakeReporter();
-  await onPostBuild({ reporter }, {}, env);
+  await storeFaces({ reporter }, env);
   assert.equal(files.get("out/faces/index.json"), '{"count":0}\n');
   assert.deepEqual(lines, [
     `warn: Stored 0 faces in out/faces (${MAX_FAILURES} requests), fewer than 100; last error: fetch failed`,
   ]);
 });
 
-test("onPostBuild warns without an error when the source repeats itself", async () => {
+test("storeFaces warns without an error when the source repeats itself", async () => {
   const { env } = fakeEnv(fakeFetch(() => face(1), AS_JPEG));
   const { reporter, lines } = fakeReporter();
-  await onPostBuild({ reporter }, {}, env);
+  await storeFaces({ reporter }, env);
   assert.deepEqual(lines, [
     `warn: Stored 1 faces in out/faces (${MAX_REQUESTS} requests), fewer than 100`,
   ]);
+});
+
+test("onPostBuild stores into public/faces with the real environment", async (t) => {
+  // Gatsby hands a callback to a hook of three parameters; this one takes one.
+  assert.equal(onPostBuild.length, 1);
+  const dir = await mkdtemp(join(tmpdir(), "faces-"));
+  const cwd = process.cwd();
+  t.mock.method(globalThis, "fetch", async () => {
+    throw new TypeError("fetch failed");
+  });
+  try {
+    process.chdir(dir);
+    const { reporter, lines } = fakeReporter();
+    await onPostBuild({ reporter });
+    assert.equal(
+      await readFile(join(dir, DIR, "index.json"), "utf8"),
+      '{"count":0}\n',
+    );
+    assert.deepEqual(lines, [
+      `warn: Stored 0 faces in ${DIR} (${MAX_FAILURES} requests), fewer than 100; last error: fetch failed`,
+    ]);
+  } finally {
+    process.chdir(cwd);
+    await rm(dir, { recursive: true });
+  }
 });
 
 test("gatsby-node.mjs hands Gatsby this hook", () => {

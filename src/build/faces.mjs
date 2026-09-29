@@ -15,15 +15,15 @@
  * The source sends no CORS header, so the page cannot read its faces itself;
  * the build fetches them and the site serves them from its own origin. The
  * source's `/random-person.jpeg` answers a new face about every 0.25 s, so the
- * build asks one at a time and keeps each face once. A build that cannot
- * reach the source stores what it got, with a warning, and never fails.
+ * build asks one at a time and keeps each face once. A source that fails,
+ * stalls or repeats itself costs the build at most `DEADLINE_MS` and never
+ * fails it: the build stores what it got, with a warning.
  * @module build/faces
  */
 
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { setTimeout as sleep } from "node:timers/promises";
-import sharp from "sharp";
 
 /** Where the faces come from: a freshly generated 1024 x 1024 JPEG. */
 export const SOURCE = "https://thispersondoesnotexist.com/random-person.jpeg";
@@ -31,8 +31,14 @@ export const SOURCE = "https://thispersondoesnotexist.com/random-person.jpeg";
 /** How many faces a build stores. */
 export const COUNT = 100;
 
-/** The edge of a stored face, in pixels: about 31 KB at `QUALITY`. */
+/** The edge of a stored face, in pixels: 20 to 50 KB at `QUALITY`. */
 export const SIZE = 512;
+
+/**
+ * The largest edge of a source image, in pixels (the source's is 1024): a
+ * larger one would cost the build its decoding memory.
+ */
+export const MAX_EDGE = 2048;
 
 /** The JPEG quality of a stored face. */
 export const QUALITY = 80;
@@ -52,6 +58,9 @@ export const MAX_REQUESTS = 500;
 /** How many failed requests in a row end the collection. */
 export const MAX_FAILURES = 5;
 
+/** How long a build may spend on the faces, in milliseconds: 3 minutes. */
+export const DEADLINE_MS = 180000;
+
 /** Where the faces go, from the site's root. */
 export const DIR = "public/faces";
 
@@ -65,6 +74,7 @@ export const DIR = "public/faces";
  * @typedef {object} Env
  * @property {Fetch} fetch fetches from the source
  * @property {function(number): Promise<unknown>} sleep waits that many ms
+ * @property {function(): number} now the clock, in ms
  * @property {function(Uint8Array): Promise<Uint8Array>} resize turns a source
  *   image into a stored face
  * @property {function(string, {recursive: boolean}): Promise<unknown>} mkdir
@@ -82,6 +92,7 @@ export const DIR = "public/faces";
  * @property {number} [maxFailures] how many failures in a row end it
  *   (`MAX_FAILURES`)
  * @property {number} [pauseMs] the pause between requests (`PAUSE_MS`)
+ * @property {number} [deadlineMs] how long it may take (`DEADLINE_MS`)
  */
 
 /**
@@ -190,13 +201,15 @@ export const fetchFace = async (fetchImpl, timeoutMs = TIMEOUT_MS) => {
  * Turns a source image into a stored face: a `SIZE` square JPEG.
  * @param {Uint8Array} bytes the source image
  * @returns {Promise<Uint8Array>} the stored face
- * @throws {Error} when the image is no square of at least `SIZE` pixels, or
- *   no image at all
+ * @throws {Error} when the image is no square of `SIZE` to `MAX_EDGE`
+ *   pixels, or no image at all
  */
 export const resize = async (bytes) => {
+  // Loaded here, not with the module: Gatsby's workers import it too.
+  const { default: sharp } = await import("sharp");
   const image = sharp(bytes);
   const { width, height } = await image.metadata();
-  if (!width || width !== height || width < SIZE) {
+  if (!width || width !== height || width < SIZE || width > MAX_EDGE) {
     throw new Error(`source sent a ${width}x${height} image`);
   }
   return image
@@ -207,9 +220,10 @@ export const resize = async (bytes) => {
 
 /**
  * Asks the source for faces, one request at a time, until `count` distinct
- * ones are in, `maxRequests` are made, or `maxFailures` fail in a row. A face
- * seen before is skipped.
- * @param {Env} env the fetch, the pause and the resize to use
+ * ones are in, `maxRequests` are made, `maxFailures` fail in a row, or
+ * `deadlineMs` pass; no request runs past the deadline. A face seen before is
+ * skipped.
+ * @param {Env} env the fetch, the pause, the clock and the resize to use
  * @param {Limits} [limits] the limits; the module's constants unless a test
  *   passes smaller ones
  * @returns {Promise<Collection>} the faces, the requests made, the last error
@@ -221,8 +235,10 @@ export const collectFaces = async (
     maxRequests = MAX_REQUESTS,
     maxFailures = MAX_FAILURES,
     pauseMs = PAUSE_MS,
+    deadlineMs = DEADLINE_MS,
   } = {},
 ) => {
+  const start = env.now();
   const seen = new Set();
   /** @type {Array<Uint8Array>} */
   const faces = [];
@@ -236,9 +252,14 @@ export const collectFaces = async (
     failures < maxFailures
   ) {
     if (requests > 0) await env.sleep(pauseMs);
+    const left = deadlineMs - (env.now() - start);
+    if (left <= 0) {
+      error = `stopped after ${deadlineMs} ms`;
+      break;
+    }
     requests += 1;
     try {
-      const bytes = await fetchFace(env.fetch);
+      const bytes = await fetchFace(env.fetch, Math.min(TIMEOUT_MS, left));
       const key = createHash("sha256").update(bytes).digest("hex");
       // A face counts as seen once it is stored: an image that fails to
       // resize fails again when the source repeats it.
@@ -288,6 +309,11 @@ export const defaultEnv = () => ({
    */
   fetch: (url, init) => globalThis.fetch(url, init),
   sleep,
+  /**
+   * The system clock.
+   * @returns {number} milliseconds since 1970
+   */
+  now: () => Date.now(),
   resize,
   mkdir,
   writeFile,
@@ -295,18 +321,13 @@ export const defaultEnv = () => ({
 });
 
 /**
- * Gatsby's hook after a build: stores the face pool and reports how it went.
- * Fewer than `COUNT` faces is a warning, never an error.
+ * Stores the face pool and reports how it went. Fewer than `COUNT` faces is
+ * a warning, never an error.
  * @param {{reporter: Reporter}} args what Gatsby passes
- * @param {object} [_options] the site's plugin options, unused
- * @param {Env} [env] the real ones unless a test passes fakes
+ * @param {Env} env the network, clock, image library and files to use
  * @returns {Promise<void>} once the faces are stored
  */
-export const onPostBuild = async (
-  { reporter },
-  _options,
-  env = defaultEnv(),
-) => {
+export const storeFaces = async ({ reporter }, env) => {
   const { faces, requests, error } = await collectFaces(env);
   await writeFaces(env.dir, faces, env);
   const line = `Stored ${faces.length} faces in ${env.dir} (${requests} requests)`;
@@ -318,3 +339,11 @@ export const onPostBuild = async (
     reporter.info(line);
   }
 };
+
+/**
+ * Gatsby's hook after a build, with the real network, clock, image library and
+ * files. It takes one parameter: Gatsby hands a callback to a hook of three.
+ * @param {{reporter: Reporter}} args what Gatsby passes
+ * @returns {Promise<void>} once the faces are stored
+ */
+export const onPostBuild = (args) => storeFaces(args, defaultEnv());
